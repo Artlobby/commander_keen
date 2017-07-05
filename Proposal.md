@@ -25,7 +25,7 @@ In addition, this project will include:
 ### Wireframes
 
 This app will consist of a single screen with game board, game controls, and nav links to the Github, my LinkedIn,
-and the About modal.
+and the About modal in the Windows-like 'window'.
 
 Time permitting, this game will attempt to exactly replicate the Windows 3.1 interface and menubar.
 
@@ -39,7 +39,7 @@ This project will be implemented with the following technologies:
 - `JavaScript` and `ReactJS` for game logic,
 - `ReactJS` and `CSS` for effects rendering,
 
-In addition to the entry file, there will be three components involved in this project:
+In addition to the entry file, there will be five components involved in this project:
 
 `game.jsx`: this component will hander overall game logic including tracking keys, the global store, etc.
 
@@ -54,7 +54,7 @@ In addition to the entry file, there will be three components involved in this p
 
 ### Implementation Timeline
 
-**Day 1**: Set up ReactJS basic components, get webpack config to work.  Set up initial game logic around levels, etc.
+**Day 1**: Set up ReactJS basic components, get webpack config to work.  Set up initial game logic around levels, etc. Create basic headers.
 
 - 2-3 different 'level' components.
 - Set up extremely basic CSS board.
@@ -69,6 +69,7 @@ In addition to the entry file, there will be three components involved in this p
 **Day 3**: Component interaction
 
 - Components will have specific interactions when they are pushed around.  This will require many Redux cycles. Interactions include:
+
   - Chip with doors
   - Chip with blocks
   - Chip with keys
