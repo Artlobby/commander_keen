@@ -6,7 +6,7 @@ Chip's Challenge is a classic tile-based puzzle game originally published by Epy
 Chip's goal is to find the keys to unlock doors, and must move blocks in order to gain access to keys.
 
 I want to show how effectively React components can enable dry, well-organized code, and picked a game that strongly favors a great deal of object-oriented programming.  Additionally, as an aspiring front-end developer who loves writing React, I believe that demonstrating a very strong understanding of ReactJS beyond my original fullstack project will help drive home
-to recruiters that I have an extremely solid understanding of React and Redux fundamentals and and have solid CSS skills that can flex well beyond traditional web applications.  By heavily leveraging ReactJS's underlying Render logic, I can quickly and easily write ChipJS by simply managing state of my underlying components!  As a turn-based, tile-based game, Chip's Challenge is a perfect ReactJS candidate.  Note that no back-end requests are expected.
+to recruiters that I have an extremely solid understanding of React and Redux fundamentals and and have solid CSS skills that can flex well beyond traditional web applications.  By heavily leveraging ReactJS's underlying Render logic, I can quickly and (somewhat) easily write ChipJS by simply managing state of my underlying components!  As a turn-based, tile-based game, Chip's Challenge is a perfect ReactJS candidate. Lastly, by avoiding any game libraries and using a general framework like React, I can overwhelmingly demonstrate that I fully and deeply understand everything it took to create the game.
 
 ### Functionality & MVP  
 
@@ -68,19 +68,13 @@ In addition to the entry file, there will be three components involved in this p
 
 **Day 3**: Component interaction
 
-- Components will have specific interactions when they are pushed around.  This will require many Redux cycles.
+- Components will have specific interactions when they are pushed around.  This will require many Redux cycles. Interactions include:
+  - Chip with doors
+  - Chip with blocks
+  - Chip with keys
 
 
 **Day 4**: Finish component interaction + board logic interaction.
 
-- Create controls for game speed, stop, start, reset, and shape type
-- Have a styled `HTML Baz`, nice looking controls and title
-- If time: include buttons on the side to toggle the color scheme of the cells
-
-
-### Bonus features
-
-There are many directions this cellular automata engine could eventually go.  Some anticipated updates are:
-- [ ] Add options for different rule sets
-- [ ] Add multiple choices for starting states that are interesting
-- [ ] Explore multi-state versions of the game, such as the ones outlined [here](https://cs.stanford.edu/people/eroberts/courses/soco/projects/2008-09/modeling-natural-systems/gameOfLife2.html)
+- Game logic should trigger win condition once certain component requirements have been fulfilled.
+- Install non-movement keybindings such as level reset.
