@@ -34,6 +34,9 @@ class Board extends React.Component{
     return row.map( (tile, j) => {
       return (
         <Tile
+          x_loc={j}
+          y_loc={i}
+          state={this.props.state}
           tile={tile}
           updateGame={this.props.updateGame}
           key={i * board.gridSize + j} />

@@ -4,6 +4,11 @@
   text-align: center;
 }
 
+.zoom
+{
+  zoom: 160%;
+}
+
 h1 {
   font-size: 24px;
   text-align: center;
@@ -25,19 +30,41 @@ p {
   display: block;
 }
 
+section{
+}
+
 .tile {
-  height: 40px;
-  width: 40px;
-  background: lightgray;
+  height: 38px;
+  width: 37px;
+  background: transparent;
+  background-image: url('ground_sprite_3.png');
   float: left;
-  border-style: outset;
-  border-width: 2px;
+  border-style: none;
   line-height: 20px;
   padding-left: 3px;
   font-size: 14px;
   font-weight: bold;
   position: relative;
   text-align: center;
+}
+
+.keen{
+  position: relative;
+  left: -1px;
+  top: 2px;
+}
+
+.keys{
+  position: relative;
+  left: -3px;
+  bottom: 0px;
+}
+
+.wall{
+  position: relative;
+  left: -4px;
+  bottom: 0px;
+
 }
 
 .explored {
