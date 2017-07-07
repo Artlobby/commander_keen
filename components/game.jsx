@@ -4,6 +4,7 @@ import * as commander_keen from '../commander_keen';
 import * as LevelDetails from './level_details';
 import { merge } from 'lodash';
 import { BOARD_WIDTH, BOARD_LENGTH } from './level_details';
+import KeyList from './objects/key_list.jsx';
 
 class Game extends React.Component{
   constructor(props) {
@@ -15,6 +16,11 @@ class Game extends React.Component{
     this.handleInputs = this.handleInputs.bind(this);
     this.moveBlocks = this.moveBlocks.bind(this);
     this.handleResetGame = this.handleResetGame.bind(this);
+    this.handleKeyPickup = this.handleKeyPickup.bind(this);
+    this.handleDoorOpening = this.handleDoorOpening.bind(this);
+    this.impassables = this.state.wallLoc;
+    this.impassables.push(this.state.yellowDoorLoc);
+    this.impassables.push(this.state.redDoorLoc);
 
   }
 
@@ -35,6 +41,8 @@ class Game extends React.Component{
     document.addEventListener("keyup", this.handleInputs.bind(this));
     document.addEventListener("keyup", this.moveBlocks.bind(this));
     document.addEventListener("keydown", this.handleResetGame.bind(this));
+    document.addEventListener("keyup", this.handleKeyPickup.bind(this));
+    document.addEventListener("keyup", this.handleDoorOpening.bind(this));
 
     if (this.level === 1){
       this.setState( () => {
@@ -60,6 +68,68 @@ class Game extends React.Component{
     }
   }
 
+  handleKeyPickup(){
+    let keenLoc = this.state.keenLoc;
+    let yellowKeyLoc = this.state.yellowKeyLoc;
+    let yellowDoorLoc = this.state.yellowDoorLoc;
+    let redDoorLoc = this.state.redDoorLoc;
+    let redKeyLoc = this.state.redKeyLoc;
+    console.log(this.impassables);
+    let elementsToDelete = [];
+    if ( keenLoc['x'] === yellowKeyLoc['x'] && keenLoc['y'] === yellowKeyLoc['y'] ){
+      this.impassables.forEach( (impassable, idx) => {
+        if (impassable['x'] === yellowDoorLoc['x'] && impassable['y'] === yellowDoorLoc['y']){
+          elementsToDelete.push(idx);
+        }
+      })
+      elementsToDelete.forEach( (el) => {
+        this.impassables.splice(el, 1)
+      });
+
+      this.setState( () => {
+        return {hasYellowKey: true};
+      });
+    }
+    if ( keenLoc['x'] === redKeyLoc['x'] && keenLoc['y'] === redKeyLoc['y'] ){
+      this.impassables.forEach( (impassable, idx) => {
+        if (impassable['x'] === redDoorLoc['x'] && impassable['y'] === redDoorLoc['y']){
+          elementsToDelete.push(idx);
+        }
+      })
+      elementsToDelete.forEach( (el) => {
+        this.impassables.splice(el, 1)
+      });
+
+
+      this.setState( () => {
+        return {hasRedKey: true};
+      });
+    }
+
+  }
+
+  handleDoorOpening(){
+    let keenLoc = this.state.keenLoc;
+    let yellowDoorLoc = this.state.yellowDoorLoc;
+    let redDoorLoc = this.state.redDoorLoc;
+    let hasRedKey = this.state.hasRedKey;
+    let hasYellowKey = this.state.hasYellowKey;
+    if ( keenLoc['x'] === yellowDoorLoc['x'] && keenLoc['y'] === yellowDoorLoc['y'] && hasYellowKey ){
+      this.setState( () => {
+        return {yellowDoorOpen: true};
+      });
+    }
+
+    if ( keenLoc['x'] === redDoorLoc['x'] && keenLoc['y'] === redDoorLoc['y'] && hasRedKey ){
+      this.setState( () => {
+        return {redDoorOpen: true};
+      });
+    }
+
+
+
+  }
+
   componentDidUpdate(){
     // document.addEventListener("keyup", this.moveBlocks.bind(this));
 
@@ -79,6 +149,22 @@ class Game extends React.Component{
       let newLoc = this.state.keenLoc;
 
       let immovableDoubles = this.state.wallLoc.concat(this.state.blockLoc);
+      if (!this.state.yellowDoorOpen){
+        immovableDoubles.push(this.state.yellowDoorLoc);
+      }
+      if (!this.state.redDoorOpen){
+        immovableDoubles.push(this.state.redDoorLoc);
+      }
+
+      if (!this.state.hasYellowKey){
+        immovableDoubles.push(this.state.yellowKeyLoc);
+      }
+      if (!this.state.hasRedKey){
+        immovableDoubles.push(this.state.redKeyLoc);
+      }
+
+
+
       let leftImmovables = immovableDoubles.filter( (el) => (el['x'] === keenLoc['x']-1) && el['y'] === keenLoc['y']);
       let rightImmovables = immovableDoubles.filter( (el) => (el['x'] === keenLoc['x']+1) && el['y'] === keenLoc['y']);
       let downImmovables = immovableDoubles.filter( (el) => (el['x'] === keenLoc['x']) && el['y'] === keenLoc['y']+1);
@@ -133,7 +219,7 @@ class Game extends React.Component{
   handleInputs(e){
       if (e.keyCode === 65 || e.keyCode === 37){
         let keenLoc = merge({}, this.state.keenLoc);
-        if ( (this.state.wallLoc.filter((el) => (el.x === keenLoc['x']-1
+        if ( (this.impassables.filter((el) => (el.x === keenLoc['x']-1
           && el.y === keenLoc['y'])).length === 0)
           && ( keenLoc['x']-1 >= 0 ) ) {
           this.setState( (prevState, props) => {
@@ -145,7 +231,7 @@ class Game extends React.Component{
 
       if (e.keyCode === 68 || e.keyCode === 39){
         let keenLoc = merge({}, this.state.keenLoc);
-        if ( (this.state.wallLoc.filter( (el) => (el.x === keenLoc['x']+1
+        if ( (this.impassables.filter( (el) => (el.x === keenLoc['x']+1
             && el.y === keenLoc['y'])).length === 0)
             && ( keenLoc['x']+1 <= BOARD_WIDTH )){
             this.setState( (prevState, props) => {
@@ -157,7 +243,7 @@ class Game extends React.Component{
 
       if (e.keyCode === 83 || e.keyCode === 40){
         let keenLoc = this.state.keenLoc
-        if ( (this.state.wallLoc.filter( (el) => (el.x === keenLoc['x']
+        if ( (this.impassables.filter( (el) => (el.x === keenLoc['x']
           && el.y === keenLoc['y']+1)).length === 0)
           && ( keenLoc['y']+1 <= BOARD_LENGTH )){
           this.setState( (prevState, props) => {
@@ -169,7 +255,7 @@ class Game extends React.Component{
 
       if (e.keyCode === 87 || e.keyCode === 38){
         let keenLoc = this.state.keenLoc
-        if ( (this.state.wallLoc.filter( (el) => (el.x === keenLoc['x']
+        if ( (this.impassables.filter( (el) => (el.x === keenLoc['x']
           && el.y === keenLoc['y']-1)).length === 0 )
           && ( keenLoc['y']-1 >= 0 )){
           this.setState( (prevState, props) => {
@@ -193,10 +279,15 @@ class Game extends React.Component{
         </div>;
     }
 
+
     return (
       <div className="game-wrapper">
         {modal}
         <Board state={ this.state } board={this.state.board} updateGame={this.updateGame} />
+        <section className="key-list-wrapper">
+          <div className="key-list-title"> Keys </div>
+          <KeyList hasRedKey={this.state.hasRedKey} hasYellowKey={this.state.hasYellowKey} />
+        </section>
       </div>
     );
   }

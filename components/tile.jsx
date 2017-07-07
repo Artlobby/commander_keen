@@ -5,6 +5,9 @@ import Wall from './objects/wall';
 import Block from './objects/block';
 import YellowDoor from './objects/yellow_door';
 import RedDoor from './objects/red_door';
+import RedKey from './objects/red_key';
+import Exit from './objects/exit';
+
 
 // import background from './components/ground_sprite.png';
 
@@ -51,6 +54,15 @@ class Tile extends React.Component{
             tileYLoc={this.props['y_loc']}
             yellowXLoc={this.props.state.yellowKeyLoc['x']}
             yellowYLoc={this.props.state.yellowKeyLoc['y']}
+            hasYellowKey={this.props.state.hasYellowKey}
+
+          />
+
+          <RedKey tileXLoc={this.props['x_loc']}
+            tileYLoc={this.props['y_loc']}
+            redXLoc={this.props.state.redKeyLoc['x']}
+            redYLoc={this.props.state.redKeyLoc['y']}
+            hasRedKey={this.props.state.hasRedKey}
           />
 
           <Wall
@@ -62,19 +74,29 @@ class Tile extends React.Component{
           />
 
           <YellowDoor
+            keenLoc={this.props.state.keenLoc}
             tileXLoc={this.props['x_loc']}
-
             tileYLoc={this.props['y_loc']}
             yellowXLoc={this.props.state.yellowDoorLoc['x']}
             yellowYLoc={this.props.state.yellowDoorLoc['y']}
+            yellowDoorOpen={this.props.state.yellowDoorOpen}
           />
 
           <RedDoor
+            keenLoc={this.props.state.keenLoc}
             tileXLoc={this.props['x_loc']}
-
             tileYLoc={this.props['y_loc']}
             redXLoc={this.props.state.redDoorLoc['x']}
             redYLoc={this.props.state.redDoorLoc['y']}
+            redDoorOpen={this.props.state.redDoorOpen}
+          />
+
+          <Exit
+            tileXLoc={this.props['x_loc']}
+
+            tileYLoc={this.props['y_loc']}
+            exitXLoc={this.props.state.exitLoc['x']}
+            exitYLoc={this.props.state.exitLoc['y']}
           />
 
         </div>

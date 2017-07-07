@@ -25,7 +25,58 @@ h1 {
   position: absolute;
   left: 263px;
   top: 300px;
+}
 
+.label-key-1{
+  position: relative;
+  left: -60px;
+  bottom: 0px;
+  height: 60px;
+  width: 60px;
+  margin: 0px;
+  padding: 0px;
+  /*outline: 1px solid black;*/
+
+}
+
+.label-key-2{
+  position: relative;
+  left: -30px;
+  bottom: 0px;
+  height: 60px;
+  width: 60px;
+  margin: 0px;
+  padding: 0px;
+  /*outline: 1px solid black;*/
+
+}
+
+.key-list-title{
+  color: white;
+  width: 60px;
+  height: 60px;
+  display: block;
+  /*outline: 1px solid black;*/
+  padding-top: 20px;
+  font-family: "Helvetica Neue"
+}
+
+.key-list-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  width: 200px;
+  height: 70px;
+  /*outline: 1px solid black;*/
+
+}
+
+.key-list-div-return{
+  width: 200px;
+  height: 100px;
+  /*outline: 1px solid red;*/
 }
 
 
