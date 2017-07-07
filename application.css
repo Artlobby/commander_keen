@@ -4,15 +4,31 @@
   text-align: center;
 }
 
-.zoom
+/*.zoom
 {
-  zoom: 160%;
-}
+  zoom: 100%;
+}*/
 
 h1 {
   font-size: 24px;
   text-align: center;
 }
+
+#background-body{
+  background-image: url('game_boy.png');
+  width: 900px;
+  height: 1400px;
+}
+
+.game-wrapper{
+  zoom: 110%;
+  position: absolute;
+  left: 263px;
+  top: 300px;
+
+}
+
+
 
 p {
   font-size: 13px;
@@ -37,7 +53,7 @@ section{
   height: 38px;
   width: 37px;
   background: transparent;
-  background-image: url('ground_sprite_3.png');
+  /*background-image: url('ground_sprite_3.png');*/
   float: left;
   border-style: none;
   line-height: 20px;

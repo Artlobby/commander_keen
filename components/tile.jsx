@@ -3,6 +3,9 @@ import Keen from './keen';
 import YellowKey from './objects/yellow_key';
 import Wall from './objects/wall';
 import Block from './objects/block';
+import YellowDoor from './objects/yellow_door';
+import RedDoor from './objects/red_door';
+
 // import background from './components/ground_sprite.png';
 
 class Tile extends React.Component{
@@ -35,6 +38,15 @@ class Tile extends React.Component{
             keenYLoc={this.props.state.keenLoc['y']}
           />
 
+
+          <Block
+            tileXLoc={this.props['x_loc']}
+            tileYLoc={this.props['y_loc']}
+            // blockXLoc={this.props.state.blockLoc.map( (el) => el['x'] )}
+            // blockYLoc={this.props.state.blockLoc.map( (el) => el['y'] )}
+            blockLoc={this.props.state.blockLoc}
+          />
+
           <YellowKey tileXLoc={this.props['x_loc']}
             tileYLoc={this.props['y_loc']}
             yellowXLoc={this.props.state.yellowKeyLoc['x']}
@@ -49,14 +61,21 @@ class Tile extends React.Component{
             wallLoc={this.props.state.wallLoc}
           />
 
-          <Block
+          <YellowDoor
             tileXLoc={this.props['x_loc']}
+
             tileYLoc={this.props['y_loc']}
-            // blockXLoc={this.props.state.blockLoc.map( (el) => el['x'] )}
-            // blockYLoc={this.props.state.blockLoc.map( (el) => el['y'] )}
-            blockLoc={this.props.state.blockLoc}
+            yellowXLoc={this.props.state.yellowDoorLoc['x']}
+            yellowYLoc={this.props.state.yellowDoorLoc['y']}
           />
 
+          <RedDoor
+            tileXLoc={this.props['x_loc']}
+
+            tileYLoc={this.props['y_loc']}
+            redXLoc={this.props.state.redDoorLoc['x']}
+            redYLoc={this.props.state.redDoorLoc['y']}
+          />
 
         </div>
     </section>) : ("");

@@ -7,7 +7,7 @@ class Block extends React.Component{
     if (this.props.blockLoc){
        blockSprite = (this.props.blockLoc.filter( (el) =>
        ( el['x'] === this.props.tileXLoc && el['y'] === this.props.tileYLoc ) ).length > 0)
-      ? (<img className="wall" src="assets/block.png"/>) : "";
+      ? (<img className="wall" src="assets/block_keen.png"/>) : "";
     }
     return(
       <div>

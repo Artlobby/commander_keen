@@ -11070,6 +11070,7 @@ var Game = function (_React$Component) {
     _this.updateGame = _this.updateGame.bind(_this);
     _this.handleInputs = _this.handleInputs.bind(_this);
     _this.moveBlocks = _this.moveBlocks.bind(_this);
+    _this.handleResetGame = _this.handleResetGame.bind(_this);
 
     return _this;
   }
@@ -11081,10 +11082,14 @@ var Game = function (_React$Component) {
     key: 'updateGame',
     value: function updateGame(tile, flagged) {}
   }, {
+    key: 'illegalMoveObjects',
+    value: function illegalMoveObjects(e) {}
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       document.addEventListener("keyup", this.handleInputs.bind(this));
       document.addEventListener("keyup", this.moveBlocks.bind(this));
+      document.addEventListener("keydown", this.handleResetGame.bind(this));
 
       if (this.level === 1) {
         this.setState(function () {
@@ -11093,35 +11098,100 @@ var Game = function (_React$Component) {
       }
     }
   }, {
+    key: 'handleResetGame',
+    value: function handleResetGame(e) {
+      console.log(e.keyCode);
+      var that = this;
+      if (e.keyCode === 82) {
+        switch (this.level) {
+          case 1:
+            that.setState(function () {
+              return LevelDetails.level_1();
+            });
+          default:
+            that.setState(function () {
+              return LevelDetails.level_1();
+            });
+        }
+      }
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      // document.addEventListener("keyup", this.moveBlocks.bind(this));
+
+    }
+  }, {
     key: 'moveBlocks',
     value: function moveBlocks(e) {
       var _this2 = this;
 
       var keenLoc = this.state.keenLoc;
-      var blockArray = this.state.blockLoc.filter(function (el) {
-        return el.x === keenLoc['x'] - 1 && el.y === keenLoc['y'];
-      });
-      console.log("my block array");
-      console.log(blockArray);
+      // let blockArray = this.state.blockLoc.filter((el) => (el.x === keenLoc['x']-1 && el.y === keenLoc['y']));
+      // let wallArray = this.state.wallLoc.filter((el) => (el.x === keenLoc['x']-1 && el.y === keenLoc['y']));
+      // console.log("my block array")
+      // console.log(blockArray);
       // if (blockArray.length === 1){
       // if there's exactly one thing in the way, do the following
       //we check if there's nothing in the way by filtering for things of where Keen will be
       this.setState(function (prevState, props) {
-        var prev_loc = prevState.keenLoc;
+        var prevLoc = prevState.keenLoc;
+        var newLoc = _this2.state.keenLoc;
+
+        var immovableDoubles = _this2.state.wallLoc.concat(_this2.state.blockLoc);
+        var leftImmovables = immovableDoubles.filter(function (el) {
+          return el['x'] === keenLoc['x'] - 1 && el['y'] === keenLoc['y'];
+        });
+        var rightImmovables = immovableDoubles.filter(function (el) {
+          return el['x'] === keenLoc['x'] + 1 && el['y'] === keenLoc['y'];
+        });
+        var downImmovables = immovableDoubles.filter(function (el) {
+          return el['x'] === keenLoc['x'] && el['y'] === keenLoc['y'] + 1;
+        });
+        var upImmovables = immovableDoubles.filter(function (el) {
+          return el['x'] === keenLoc['x'] && el['y'] === keenLoc['y'] - 1;
+        });
+
+        console.log(leftImmovables.length);
         var blockLocOutput = _this2.state.blockLoc.map(function (blockObj, id) {
-          if (blockObj['x'] === keenLoc['x'] && keenLoc['x'] === prevState.keenLoc['x'] && blockObj['y'] === keenLoc['y']) {
-            console.log("moving block once to left!");
-            return { x: prev_loc['x'] - 1, y: prev_loc['y'] };
+          if (blockObj['x'] === keenLoc['x'] && blockObj['y'] === keenLoc['y'] && blockObj['x'] > 0) {
+            if ((e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length === 0) {
+              return { x: keenLoc['x'] - 1, y: prevLoc['y'] };
+            } else if ((e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length > 0) {
+              _this2.setState(function () {
+                return { keenLoc: { x: prevLoc['x'] + 1, y: prevLoc['y'] } };
+              });
+              return prevState.blockLoc[id];
+            } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length === 0) {
+              return { x: keenLoc['x'] + 1, y: prevLoc['y'] };
+            } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length > 0) {
+              _this2.setState(function () {
+                return { keenLoc: { x: prevLoc['x'] - 1, y: prevLoc['y'] } };
+              });
+              return prevState.blockLoc[id];
+            } else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length === 0) {
+              return { x: keenLoc['x'], y: prevLoc['y'] + 1 };
+            } else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length > 0) {
+              _this2.setState(function () {
+                return { keenLoc: { x: prevLoc['x'], y: prevLoc['y'] - 1 } };
+              });
+              return prevState.blockLoc[id];
+            } else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length === 0) {
+              return { x: keenLoc['x'], y: prevLoc['y'] - 1 };
+            } else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length > 0) {
+              _this2.setState(function () {
+                return { keenLoc: { x: prevLoc['x'], y: prevLoc['y'] + 1 } };
+              });
+              return prevState.blockLoc[id];
+            } else {
+              return prevState.blockLoc[id];
+            }
           } else {
-            console.log("everything is normal folks");
             return prevState.blockLoc[id];
           }
         });
-        console.log("my block loc output");
-        console.log(blockLocOutput);
-        return { keenLoc: { x: prev_loc['x'] - 1, y: prev_loc['y'] }, blockLoc: blockLocOutput };
+        return { blockLoc: blockLocOutput };
       });
-      // }
     }
   }, {
     key: 'handleInputs',
@@ -11129,7 +11199,7 @@ var Game = function (_React$Component) {
       var _this3 = this;
 
       if (e.keyCode === 65 || e.keyCode === 37) {
-        var keenLoc = this.state.keenLoc;
+        var keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
         if (this.state.wallLoc.filter(function (el) {
           return el.x === keenLoc['x'] - 1 && el.y === keenLoc['y'];
         }).length === 0 && keenLoc['x'] - 1 >= 0) {
@@ -11141,10 +11211,10 @@ var Game = function (_React$Component) {
       }
 
       if (e.keyCode === 68 || e.keyCode === 39) {
-        var _keenLoc = this.state.keenLoc;
+        var _keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
         if (this.state.wallLoc.filter(function (el) {
           return el.x === _keenLoc['x'] + 1 && el.y === _keenLoc['y'];
-        }).length === 0 && _keenLoc['x'] + 1 <= 8) {
+        }).length === 0 && _keenLoc['x'] + 1 <= _level_details.BOARD_WIDTH) {
           this.setState(function (prevState, props) {
             var prev_loc = prevState.keenLoc;
             return { keenLoc: { x: prev_loc['x'] + 1, y: prev_loc['y'] } };
@@ -11156,7 +11226,7 @@ var Game = function (_React$Component) {
         var _keenLoc2 = this.state.keenLoc;
         if (this.state.wallLoc.filter(function (el) {
           return el.x === _keenLoc2['x'] && el.y === _keenLoc2['y'] + 1;
-        }).length === 0 && _keenLoc2['y'] + 1 <= 8) {
+        }).length === 0 && _keenLoc2['y'] + 1 <= _level_details.BOARD_LENGTH) {
           this.setState(function (prevState, props) {
             var prev_loc = prevState.keenLoc;
             return { keenLoc: { x: prev_loc['x'], y: prev_loc['y'] + 1 } };
@@ -11204,7 +11274,7 @@ var Game = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { className: 'zoom' },
+        { className: 'game-wrapper' },
         modal,
         _react2.default.createElement(_board2.default, { state: this.state, board: this.state.board, updateGame: this.updateGame })
       );
@@ -11287,7 +11357,7 @@ exports.default = Keen;
 Object.defineProperty(exports, "__esModule", {
           value: true
 });
-exports.level_1 = undefined;
+exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
 
 var _commander_keen = __webpack_require__(52);
 
@@ -11301,16 +11371,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var board = new commander_keen.Board(7, 7);
+var BOARD_WIDTH = exports.BOARD_WIDTH = 8;
+var BOARD_LENGTH = exports.BOARD_LENGTH = 8;
+
+var board = new commander_keen.Board(BOARD_WIDTH, BOARD_LENGTH);
 
 var level_1 = exports.level_1 = function level_1() {
           return {
                     level: 1,
                     board: board,
-                    keenLoc: { x: 5, y: 3 },
+                    keenLoc: { x: 6, y: 3 },
+                    blockLoc: [{ x: 4, y: 2 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+
+                    yellowDoorLoc: { x: 1, y: 1 },
+                    yellowDoorOpen: false,
                     yellowKeyLoc: { x: 1, y: 2 },
-                    wallLoc: [{ x: 4, y: 5 }, { x: 4, y: 4 }, { x: 4, y: 3 }, { x: 5, y: 5 }],
-                    blockLoc: [{ x: 0, y: 0 }, { x: 2, y: 2 }, { x: 3, y: 3 }]
+
+                    redDoorLoc: { x: 3, y: 4 },
+                    redDoorOpen: false,
+                    redKeyLoc: { x: 1, y: 3 },
+
+                    wallLoc: [{ x: 4, y: 5 }, { x: 4, y: 4 }, { x: 4, y: 3 }, { x: 5, y: 5 }, { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 0, y: 7 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 5, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
+
           };
 };
 
@@ -11357,7 +11439,7 @@ var Block = function (_React$Component) {
       if (this.props.blockLoc) {
         blockSprite = this.props.blockLoc.filter(function (el) {
           return el['x'] === _this2.props.tileXLoc && el['y'] === _this2.props.tileYLoc;
-        }).length > 0 ? _react2.default.createElement('img', { className: 'wall', src: 'assets/block.png' }) : "";
+        }).length > 0 ? _react2.default.createElement('img', { className: 'wall', src: 'assets/block_keen.png' }) : "";
       }
       return _react2.default.createElement(
         'div',
@@ -11514,6 +11596,14 @@ var _block = __webpack_require__(92);
 
 var _block2 = _interopRequireDefault(_block);
 
+var _yellow_door = __webpack_require__(171);
+
+var _yellow_door2 = _interopRequireDefault(_yellow_door);
+
+var _red_door = __webpack_require__(172);
+
+var _red_door2 = _interopRequireDefault(_red_door);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11562,6 +11652,13 @@ var Tile = function (_React$Component) {
             keenXLoc: this.props.state.keenLoc['x'],
             keenYLoc: this.props.state.keenLoc['y']
           }),
+          _react2.default.createElement(_block2.default, {
+            tileXLoc: this.props['x_loc'],
+            tileYLoc: this.props['y_loc']
+            // blockXLoc={this.props.state.blockLoc.map( (el) => el['x'] )}
+            // blockYLoc={this.props.state.blockLoc.map( (el) => el['y'] )}
+            , blockLoc: this.props.state.blockLoc
+          }),
           _react2.default.createElement(_yellow_key2.default, { tileXLoc: this.props['x_loc'],
             tileYLoc: this.props['y_loc'],
             yellowXLoc: this.props.state.yellowKeyLoc['x'],
@@ -11574,12 +11671,19 @@ var Tile = function (_React$Component) {
             // wallYLoc={this.props.state.wallLoc.map( (el) => el['y'] )}
             , wallLoc: this.props.state.wallLoc
           }),
-          _react2.default.createElement(_block2.default, {
+          _react2.default.createElement(_yellow_door2.default, {
             tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc']
-            // blockXLoc={this.props.state.blockLoc.map( (el) => el['x'] )}
-            // blockYLoc={this.props.state.blockLoc.map( (el) => el['y'] )}
-            , blockLoc: this.props.state.blockLoc
+
+            tileYLoc: this.props['y_loc'],
+            yellowXLoc: this.props.state.yellowDoorLoc['x'],
+            yellowYLoc: this.props.state.yellowDoorLoc['y']
+          }),
+          _react2.default.createElement(_red_door2.default, {
+            tileXLoc: this.props['x_loc'],
+
+            tileYLoc: this.props['y_loc'],
+            redXLoc: this.props.state.redDoorLoc['x'],
+            redYLoc: this.props.state.redDoorLoc['y']
           })
         )
       ) : "";
@@ -37836,6 +37940,108 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(12);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var YellowDoor = function (_React$Component) {
+  _inherits(YellowDoor, _React$Component);
+
+  function YellowDoor() {
+    _classCallCheck(this, YellowDoor);
+
+    return _possibleConstructorReturn(this, (YellowDoor.__proto__ || Object.getPrototypeOf(YellowDoor)).apply(this, arguments));
+  }
+
+  _createClass(YellowDoor, [{
+    key: "render",
+    value: function render() {
+      var yellowDoor = this.props.tileXLoc === this.props.yellowXLoc && this.props.tileYLoc === this.props.yellowYLoc ? _react2.default.createElement("img", { className: "keys", src: "assets/yellow_door_keen.png" }) : "";
+      return _react2.default.createElement(
+        "div",
+        null,
+        yellowDoor
+      );
+    }
+  }]);
+
+  return YellowDoor;
+}(_react2.default.Component);
+
+exports.default = YellowDoor;
+
+/***/ }),
+/* 172 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(12);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RedDoor = function (_React$Component) {
+  _inherits(RedDoor, _React$Component);
+
+  function RedDoor() {
+    _classCallCheck(this, RedDoor);
+
+    return _possibleConstructorReturn(this, (RedDoor.__proto__ || Object.getPrototypeOf(RedDoor)).apply(this, arguments));
+  }
+
+  _createClass(RedDoor, [{
+    key: "render",
+    value: function render() {
+      var redDoor = this.props.tileXLoc === this.props.redXLoc && this.props.tileYLoc === this.props.redYLoc ? _react2.default.createElement("img", { className: "keys", src: "assets/red_door_keen.png" }) : "";
+      return _react2.default.createElement(
+        "div",
+        null,
+        redDoor
+      );
+    }
+  }]);
+
+  return RedDoor;
+}(_react2.default.Component);
+
+exports.default = RedDoor;
 
 /***/ })
 /******/ ]);
