@@ -7,6 +7,7 @@ import YellowDoor from './objects/yellow_door';
 import RedDoor from './objects/red_door';
 import RedKey from './objects/red_key';
 import Exit from './objects/exit';
+import JunkFood from './objects/junk_food';
 
 
 // import background from './components/ground_sprite.png';
@@ -97,6 +98,12 @@ class Tile extends React.Component{
             tileYLoc={this.props['y_loc']}
             exitXLoc={this.props.state.exitLoc['x']}
             exitYLoc={this.props.state.exitLoc['y']}
+          />
+
+          <JunkFood
+            tileXLoc={this.props['x_loc']}
+            tileYLoc={this.props['y_loc']}
+            junkLoc={this.props.state.junkLoc}            
           />
 
         </div>

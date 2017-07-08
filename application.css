@@ -20,6 +20,17 @@ h1 {
   height: 1400px;
 }
 
+.remaining-food-title{
+  color: white;
+  width: 60px;
+  height: 60px;
+  display: block;
+  /*outline: 1px solid black;*/
+  padding-top: 20px;
+  font-family: "Helvetica Neue"
+
+}
+
 .game-wrapper{
   zoom: 110%;
   position: absolute;
@@ -67,7 +78,7 @@ h1 {
   align-items: flex-start;
   justify-content: space-between;
 
-  width: 200px;
+  width: 300px;
   height: 70px;
   /*outline: 1px solid black;*/
 
