@@ -11410,14 +11410,7 @@ var Game = function (_React$Component) {
             { className: 'key-list-title' },
             ' Keys: '
           ),
-          _react2.default.createElement(_key_list2.default, { hasRedKey: this.state.hasRedKey, hasYellowKey: this.state.hasYellowKey }),
-          _react2.default.createElement(
-            'div',
-            { className: 'remaining-food-title' },
-            ' Food Needed: ',
-            this.state.remainingJunkFood,
-            ' '
-          )
+          _react2.default.createElement(_key_list2.default, { hasRedKey: this.state.hasRedKey, hasYellowKey: this.state.hasYellowKey })
         )
       );
     }

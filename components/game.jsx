@@ -316,7 +316,7 @@ class Game extends React.Component{
         <section className="key-list-wrapper">
           <div className="key-list-title"> Keys: </div>
           <KeyList hasRedKey={this.state.hasRedKey} hasYellowKey={this.state.hasYellowKey} />
-          <div className="remaining-food-title"> Food Needed: {this.state.remainingJunkFood} </div>
+          {/* <div className="remaining-food-title"> Food Needed: {this.state.remainingJunkFood} </div> */}
         </section>
       </div>
     );
