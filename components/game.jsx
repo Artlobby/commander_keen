@@ -9,8 +9,6 @@ import KeyList from './objects/key_list.jsx';
 class Game extends React.Component{
   constructor(props) {
     super(props);
-    this.level = 1;
-    this.state = LevelDetails.level_1();
     this.restartGame = this.restartGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
     this.handleInputs = this.handleInputs.bind(this);
@@ -18,13 +16,16 @@ class Game extends React.Component{
     this.handleResetGame = this.handleResetGame.bind(this);
     this.handleKeyPickup = this.handleKeyPickup.bind(this);
     this.handleDoorOpening = this.handleDoorOpening.bind(this);
-    this.impassables = this.state.wallLoc;
-    this.impassables.push(this.state.yellowDoorLoc);
-    this.impassables.push(this.state.redDoorLoc);
-    this.remainingJunkFood = this.state.junkLoc;
     this.validateKeenLoc = this.validateKeenLoc.bind(this);
     this.generalValidation = this.generalValidation.bind(this);
     this.handleJunkFoodPickup = this.handleJunkFoodPickup.bind(this);
+
+    this.level = 1;
+    this.state = LevelDetails.level_1();
+    this.impassables = this.state.wallLoc;
+    this.impassables.push(this.state.yellowDoorLoc);
+    this.impassables.push(this.state.redDoorLoc);
+    this.remainingJunkFood = this.state.junkLoc.length;
   }
 
   restartGame() {
@@ -112,6 +113,7 @@ class Game extends React.Component{
         return {hasRedKey: true};
       });
     }
+
   }
 
   handleJunkFoodPickup(keenLocX, keenLocY){
@@ -124,6 +126,8 @@ class Game extends React.Component{
     this.setState( () => {
       return {junkLoc: junkLoc};
     });
+    this.remainingJunkFood = this.state.junkLoc.length;
+
   }
 
   validateKeenLoc(objLoc, optionsHash){
@@ -316,8 +320,10 @@ class Game extends React.Component{
         <section className="key-list-wrapper">
           <div className="key-list-title"> Keys: </div>
           <KeyList hasRedKey={this.state.hasRedKey} hasYellowKey={this.state.hasYellowKey} />
-          {/* <div className="remaining-food-title"> Food Needed: {this.state.remainingJunkFood} </div> */}
+          <div className="spacer"> </div>
         </section>
+        <div className="remaining-food-title"> Food Needed: {this.remainingJunkFood} </div>
+
       </div>
     );
   }

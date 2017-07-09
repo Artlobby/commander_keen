@@ -11068,8 +11068,6 @@ var Game = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
-    _this.level = 1;
-    _this.state = LevelDetails.level_1();
     _this.restartGame = _this.restartGame.bind(_this);
     _this.updateGame = _this.updateGame.bind(_this);
     _this.handleInputs = _this.handleInputs.bind(_this);
@@ -11077,13 +11075,16 @@ var Game = function (_React$Component) {
     _this.handleResetGame = _this.handleResetGame.bind(_this);
     _this.handleKeyPickup = _this.handleKeyPickup.bind(_this);
     _this.handleDoorOpening = _this.handleDoorOpening.bind(_this);
-    _this.impassables = _this.state.wallLoc;
-    _this.impassables.push(_this.state.yellowDoorLoc);
-    _this.impassables.push(_this.state.redDoorLoc);
-    _this.remainingJunkFood = _this.state.junkLoc;
     _this.validateKeenLoc = _this.validateKeenLoc.bind(_this);
     _this.generalValidation = _this.generalValidation.bind(_this);
     _this.handleJunkFoodPickup = _this.handleJunkFoodPickup.bind(_this);
+
+    _this.level = 1;
+    _this.state = LevelDetails.level_1();
+    _this.impassables = _this.state.wallLoc;
+    _this.impassables.push(_this.state.yellowDoorLoc);
+    _this.impassables.push(_this.state.redDoorLoc);
+    _this.remainingJunkFood = _this.state.junkLoc.length;
     return _this;
   }
 
@@ -11185,6 +11186,7 @@ var Game = function (_React$Component) {
       this.setState(function () {
         return { junkLoc: junkLoc };
       });
+      this.remainingJunkFood = this.state.junkLoc.length;
     }
   }, {
     key: 'validateKeenLoc',
@@ -11410,7 +11412,19 @@ var Game = function (_React$Component) {
             { className: 'key-list-title' },
             ' Keys: '
           ),
-          _react2.default.createElement(_key_list2.default, { hasRedKey: this.state.hasRedKey, hasYellowKey: this.state.hasYellowKey })
+          _react2.default.createElement(_key_list2.default, { hasRedKey: this.state.hasRedKey, hasYellowKey: this.state.hasYellowKey }),
+          _react2.default.createElement(
+            'div',
+            { className: 'spacer' },
+            ' '
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'remaining-food-title' },
+          ' Food Needed: ',
+          this.remainingJunkFood,
+          ' '
         )
       );
     }

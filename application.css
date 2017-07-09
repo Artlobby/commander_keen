@@ -177,3 +177,15 @@ section{
   text-align: center;
   transform: translateX(-50%) translateY(-50%);
 }
+
+.spacer{
+    width: 100px;
+}
+
+.remaining-food-title{
+  position: absolute;
+  bottom: -11px;
+  right: 150px;
+  width: 200px;
+
+}
