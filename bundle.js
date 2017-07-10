@@ -11078,6 +11078,7 @@ var Game = function (_React$Component) {
     _this.validateKeenLoc = _this.validateKeenLoc.bind(_this);
     _this.generalValidation = _this.generalValidation.bind(_this);
     _this.handleJunkFoodPickup = _this.handleJunkFoodPickup.bind(_this);
+    _this.handleLevelCompletion = _this.handleLevelCompletion.bind(_this);
 
     _this.level = 1;
     _this.state = LevelDetails.level_1();
@@ -11106,6 +11107,8 @@ var Game = function (_React$Component) {
       document.addEventListener("keydown", this.handleResetGame.bind(this));
       document.addEventListener("keyup", this.handleKeyPickup.bind(this));
       document.addEventListener("keyup", this.handleDoorOpening.bind(this));
+      document.addEventListener("keyup", this.handleDoorOpening.bind(this));
+      document.addEventListener("keyup", this.handleLevelCompletion.bind(this));
 
       if (this.level === 1) {
         this.setState(function () {
@@ -11113,6 +11116,9 @@ var Game = function (_React$Component) {
         });
       }
     }
+  }, {
+    key: 'handleLevelCompletion',
+    value: function handleLevelCompletion() {}
   }, {
     key: 'handleResetGame',
     value: function handleResetGame(e) {

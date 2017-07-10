@@ -19,6 +19,7 @@ class Game extends React.Component{
     this.validateKeenLoc = this.validateKeenLoc.bind(this);
     this.generalValidation = this.generalValidation.bind(this);
     this.handleJunkFoodPickup = this.handleJunkFoodPickup.bind(this);
+    this.handleLevelCompletion = this.handleLevelCompletion.bind(this);
 
     this.level = 1;
     this.state = LevelDetails.level_1();
@@ -48,12 +49,19 @@ class Game extends React.Component{
     document.addEventListener("keydown", this.handleResetGame.bind(this));
     document.addEventListener("keyup", this.handleKeyPickup.bind(this));
     document.addEventListener("keyup", this.handleDoorOpening.bind(this));
+    document.addEventListener("keyup", this.handleDoorOpening.bind(this));
+    document.addEventListener("keyup", this.handleLevelCompletion.bind(this));
 
     if (this.level === 1){
       this.setState( () => {
         return LevelDetails.level_1();
       })
     }
+  }
+
+  handleLevelCompletion(){
+    
+
   }
 
   handleResetGame(e){
