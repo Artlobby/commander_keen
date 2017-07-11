@@ -15,60 +15,67 @@ import JunkFood from './objects/junk_food';
 class Tile extends React.Component{
   constructor(props){
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-
-  }
-
-  handleClick(e) {
-    const flagged = e.altKey ? true : false;
-    this.props.updateGame(this.props.tile, flagged);
-  }
-
-  keenRender(e){
-
   }
 
   render() {
-    let klass = 'unexplored';
-    klass = `tile ${klass}`;
+    let tileXLoc = this.props['x_loc'];
+    let tileYLoc = this.props['y_loc'];
+
+    let keenXLoc = this.props.state.keenLoc['x'];
+    let keenYLoc = this.props.state.keenLoc['y'];
+    // let buttonXLoc = this.props.state.buttonLoc['x'];
+    // let buttonYLoc = this.props.state.buttonLoc['y'];
+    let klass = `tile unexplored`;
+    if (this.props.state.buttonLoc){
+      let filterSet = this.props.state.buttonLoc.filter( (loc) => {
+        return ((loc['x'] === tileXLoc) && (loc['y'] === tileYLoc));
+      });
+      if ( filterSet.length > 0){
+        klass = `tile button-tile`;
+      }
+    }
+
     let renderOutput = this.props.state.wallLoc ?
     (<section className="back-image">
 
-        <div className={klass} onClick={this.handleClick}>
+        <div className={klass}>
 
-          <Keen tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
-            keenXLoc={this.props.state.keenLoc['x']}
-            keenYLoc={this.props.state.keenLoc['y']}
+          <Keen
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
+            keenXLoc={keenXLoc}
+            keenYLoc={keenYLoc}
           />
 
 
           <Block
-            tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             // blockXLoc={this.props.state.blockLoc.map( (el) => el['x'] )}
             // blockYLoc={this.props.state.blockLoc.map( (el) => el['y'] )}
             blockLoc={this.props.state.blockLoc}
           />
 
-          <YellowKey tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
+          <YellowKey
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             yellowXLoc={this.props.state.yellowKeyLoc['x']}
             yellowYLoc={this.props.state.yellowKeyLoc['y']}
             hasYellowKey={this.props.state.hasYellowKey}
 
           />
 
-          <RedKey tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
+          <RedKey
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             redXLoc={this.props.state.redKeyLoc['x']}
             redYLoc={this.props.state.redKeyLoc['y']}
             hasRedKey={this.props.state.hasRedKey}
           />
 
           <Wall
-            tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             // wallXLoc={this.props.state.wallLoc.map( (el) => el['x'] )}
             // wallYLoc={this.props.state.wallLoc.map( (el) => el['y'] )}
             wallLoc={this.props.state.wallLoc}
@@ -76,8 +83,8 @@ class Tile extends React.Component{
 
           <YellowDoor
             keenLoc={this.props.state.keenLoc}
-            tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             yellowXLoc={this.props.state.yellowDoorLoc['x']}
             yellowYLoc={this.props.state.yellowDoorLoc['y']}
             yellowDoorOpen={this.props.state.yellowDoorOpen}
@@ -85,25 +92,25 @@ class Tile extends React.Component{
 
           <RedDoor
             keenLoc={this.props.state.keenLoc}
-            tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             redXLoc={this.props.state.redDoorLoc['x']}
             redYLoc={this.props.state.redDoorLoc['y']}
             redDoorOpen={this.props.state.redDoorOpen}
           />
 
           <Exit
-            tileXLoc={this.props['x_loc']}
-
-            tileYLoc={this.props['y_loc']}
+            allButtonsCovered={this.props.allButtonsCovered}
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
             exitXLoc={this.props.state.exitLoc['x']}
             exitYLoc={this.props.state.exitLoc['y']}
           />
 
           <JunkFood
-            tileXLoc={this.props['x_loc']}
-            tileYLoc={this.props['y_loc']}
-            junkLoc={this.props.state.junkLoc}            
+            tileXLoc={tileXLoc}
+            tileYLoc={tileYLoc}
+            junkLoc={this.props.state.junkLoc}
           />
 
         </div>

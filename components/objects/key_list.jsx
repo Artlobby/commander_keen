@@ -2,9 +2,7 @@ import React from 'react';
 
 class KeyList extends React.Component{
 
-
   render(){
-    // console.log(this.props)
     let redKeySprite = (this.props['hasRedKey'])
     ? (<img className="label-key-1" src="assets/red_key.png"/>) : (<img className="label-key-1" src="assets/empty_key.png"/>);
 

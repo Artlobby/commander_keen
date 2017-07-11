@@ -20,13 +20,18 @@ class Game extends React.Component{
     this.generalValidation = this.generalValidation.bind(this);
     this.handleJunkFoodPickup = this.handleJunkFoodPickup.bind(this);
     this.handleLevelCompletion = this.handleLevelCompletion.bind(this);
+    this.handleButtonCoverage = this.handleButtonCoverage.bind(this);
 
     this.level = 1;
     this.state = LevelDetails.level_1();
     this.impassables = this.state.wallLoc;
     this.impassables.push(this.state.yellowDoorLoc);
     this.impassables.push(this.state.redDoorLoc);
+
     this.remainingJunkFood = this.state.junkLoc.length;
+
+    this.foodNotification = false;
+    this.winNotification = false;
   }
 
   restartGame() {
@@ -50,39 +55,107 @@ class Game extends React.Component{
     document.addEventListener("keyup", this.handleKeyPickup.bind(this));
     document.addEventListener("keyup", this.handleDoorOpening.bind(this));
     document.addEventListener("keyup", this.handleDoorOpening.bind(this));
+    document.addEventListener("keyup", this.handleButtonCoverage.bind(this));
     document.addEventListener("keyup", this.handleLevelCompletion.bind(this));
 
-    if (this.level === 1){
+    this.level = 3;
+    this.setState( () => {
+        return LevelDetails.level_3();
+      }
+    );
+
+  }
+
+  handleLevelCompletion(e){
+    let exitLoc = this.state.exitLoc;
+    let buttonsCovered = this.state.allButtonsCovered;
+
+    console.log(`Buttons covered?` + buttonsCovered);
+    console.log("everything working?")
+    console.log(this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered);
+    if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered) {
+      if (this.level === 3){
+        console.log("Winner");
+      } else {
+        console.log("level is complete???")
+        this.level += 1;
+        this.resetEvent();
+        setTimeout(this.levelSwitch, 1000);
+        console.log("level switch fired");
+        this.levelSwitch();
+      }
+    } else if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood > 0) {
+      this.foodNotification = true;
       this.setState( () => {
-        return LevelDetails.level_1();
-      })
+          return {keenLoc: {x: 6, y: 1}};
+        }
+      );
     }
   }
 
-  handleLevelCompletion(){
-    
-
+  buttonsCovered(){
+    let buttonLoc = this.state.buttonLoc;
+    let blockLoc = this.state.blockLoc;
+    let boolArray = [];
+    let finalBool = true;
+    buttonLoc.forEach( (button) => {
+      let myBool = blockLoc.some( (block) => {
+        return ((button['x'] == block['x']) && (button['y'] == block['y']));
+      });
+      if (myBool === false){
+        finalBool = false;
+      }
+    });
+    return finalBool;
   }
+
+  handleButtonCoverage(){
+    if (this.buttonsCovered()){
+      this.setState( () => {
+          return {allButtonsCovered: true};
+        }
+      );
+    } else {
+      this.setState( () => {
+          return {allButtonsCovered: false};
+        }
+      );
+    }
+  }
+
 
   handleResetGame(e){
     if (e.keyCode === 82) {
-      this.impassables = this.state.wallLoc;
-      this.impassables.push(this.state.yellowDoorLoc);
-      this.impassables.push(this.state.redDoorLoc);
-      this.impassables.concat(this.state.junkLoc);
+      this.levelSwitch();
+    }
+  }
 
+  resetEvent(e){
+    this.levelSwitch();
+  }
 
-
-      switch (this.level ){
-        case 1:
+  levelSwitch(e){
+    this.impassables = this.state.wallLoc.slice();
+    this.impassables.push(this.state.yellowDoorLoc);
+    this.impassables.push(this.state.redDoorLoc);
+    this.impassables.concat(this.state.junkLoc);
+    this.foodNotification = false;
+    switch (this.level){
+      case 1:
         this.setState( () => {
-          return LevelDetails.level_1();
-        });
-        default:
+            return LevelDetails.level_1();
+          });
+        break;
+      case 2:
         this.setState( () => {
-          return LevelDetails.level_1();
-        });
-      }
+            return LevelDetails.level_2();
+          });
+        break;
+      case 3:
+        this.setState( () => {
+            return LevelDetails.level_3();
+          });
+        break;
     }
   }
 
@@ -98,9 +171,9 @@ class Game extends React.Component{
         if (this.generalValidation(impassable, yellowDoorLoc)){
           elementsToDelete.push(idx);
         }
-      })
+      });
       elementsToDelete.forEach( (el) => {
-        this.impassables.splice(el, 1)
+        this.impassables.splice(el, 1);
       });
 
       this.setState( () => {
@@ -112,16 +185,15 @@ class Game extends React.Component{
         if (this.generalValidation(impassable, redDoorLoc)){
           elementsToDelete.push(idx);
         }
-      })
+      });
       elementsToDelete.forEach( (el) => {
-        this.impassables.splice(el, 1)
+        this.impassables.splice(el, 1);
       });
 
       this.setState( () => {
         return {hasRedKey: true};
       });
     }
-
   }
 
   handleJunkFoodPickup(keenLocX, keenLocY){
@@ -135,7 +207,6 @@ class Game extends React.Component{
       return {junkLoc: junkLoc};
     });
     this.remainingJunkFood = this.state.junkLoc.length;
-
   }
 
   validateKeenLoc(objLoc, optionsHash){
@@ -178,14 +249,8 @@ class Game extends React.Component{
     }
   }
 
-  componentDidUpdate(){
-    // document.addEventListener("keyup", this.moveBlocks.bind(this));
-
-  }
 
   moveBlocks(e){
-    console.log(this.state)
-
     let keenLoc = this.state.keenLoc;
 
     this.setState( (prevState, props) => {
@@ -206,9 +271,12 @@ class Game extends React.Component{
       if (!this.state.hasRedKey){
         immovableDoubles.push(this.state.redKeyLoc);
       }
-      console.log(this.state.junkLoc);
-      immovableDoubles.concat(this.state.junkLoc);
-      console.log(immovableDoubles);
+
+      if (this.state.junkLoc){
+        this.state.junkLoc.forEach((junk) => {
+          immovableDoubles.push(junk);
+        });
+      }
 
       let leftImmovables = immovableDoubles.filter( (el) => (this.validateKeenLoc(el, {xAdj: -1})));
       let rightImmovables = immovableDoubles.filter( (el) => (this.validateKeenLoc(el, {xAdj: 1})));
@@ -277,7 +345,7 @@ class Game extends React.Component{
       if (e.keyCode === 68 || e.keyCode === 39){
         let keenLoc = merge({}, this.state.keenLoc);
         if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {xAdj: 1}))).length === 0)
-            && ( keenLoc['x']+1 <= BOARD_WIDTH )){
+            && ( keenLoc['x']+1 < BOARD_WIDTH )){
             this.setState( (prevState, props) => {
               let prev_loc = prevState.keenLoc;
               return { keenLoc: {x: prev_loc['x']+1, y: prev_loc['y']} };
@@ -288,7 +356,7 @@ class Game extends React.Component{
       if (e.keyCode === 83 || e.keyCode === 40){
         let keenLoc = this.state.keenLoc
         if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {yAdj: 1}))).length === 0)
-          && ( keenLoc['y']+1 <= BOARD_LENGTH )){
+          && ( keenLoc['y']+1 < BOARD_LENGTH )){
           this.setState( (prevState, props) => {
             let prev_loc = prevState.keenLoc;
             return { keenLoc: {x: prev_loc['x'], y: prev_loc['y']+1} }
@@ -309,29 +377,31 @@ class Game extends React.Component{
   }
 
   render() {
-    let modal;
-    if (this.state.board.lost() || this.state.board.won()) {
-      const text = this.state.board.won() ? "You won!" : "You lost!";
-      modal =
-        <div className='modal-screen'>
-          <div className='modal-content'>
-            <p>{text}</p>
-            <button onClick={this.restartGame}>Play Again</button>
-          </div>
-        </div>;
-    }
+      let level =
+      <div className="level-text">
+        <p> Level {this.level} of 3 </p>
+      </div>
+
+      let foodModal =
+      this.foodNotification ?
+      (<div className="food-modal">
+        Need to collect more food!
+      </div>) : (<div className="food-modal">
+
+                </div>);
 
     return (
+
       <div className="game-wrapper">
-        {modal}
-        <Board state={ this.state } board={this.state.board} updateGame={this.updateGame} />
+        <Board state={ this.state } board={this.state.board} allButtonsCovered={this.state.allButtonsCovered} />
         <section className="key-list-wrapper">
           <div className="key-list-title"> Keys: </div>
           <KeyList hasRedKey={this.state.hasRedKey} hasYellowKey={this.state.hasYellowKey} />
           <div className="spacer"> </div>
         </section>
         <div className="remaining-food-title"> Food Needed: {this.remainingJunkFood} </div>
-
+        <div className="level-title"> {level} </div>
+        {foodModal}
       </div>
     );
   }

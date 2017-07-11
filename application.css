@@ -31,14 +31,14 @@ p{
 
 #background-body{
   background-image: url('game_boy.png');
+  zoom: 75%;
   width: 900px;
   height: 1400px;
   position: absolute;
-  left: 250px;
+  left: 500px;
 }
 
 .cover-wrapper{
-
   background-image: url('https://s-media-cache-ak0.pinimg.com/originals/7b/8a/98/7b8a983faf282cab258cbfe9f5c226bb.jpg');
   background-size: 180%;
   min-height: 100vh;
@@ -146,6 +146,8 @@ section{
   height: 38px;
   width: 37px;
   background: transparent;
+  /*background-image: url('button.png');*/
+
   /*background-image: url('ground_sprite_3.png');*/
   float: left;
   border-style: none;
@@ -155,6 +157,12 @@ section{
   font-weight: bold;
   position: relative;
   text-align: center;
+}
+
+.button-tile{
+  background-image: url('button.png');
+
+
 }
 
 .keen{
@@ -169,10 +177,31 @@ section{
   bottom: 0px;
 }
 
+.exit-loc{
+  position: relative;
+  left: -3px;
+  bottom: 6px;
+}
+
 .wall{
   position: relative;
   left: -4px;
   bottom: 0px;
+  z-index: 2;
+}
+
+.block{
+  position: relative;
+  left: -3px;
+  bottom: -1px;
+  z-index: 2;
+}
+
+.food{
+  position: relative;
+  left: -4px;
+  bottom: 0px;
+  z-index: 1;
 
 }
 
@@ -216,7 +245,30 @@ section{
 .remaining-food-title{
   position: absolute;
   bottom: -11px;
-  right: 150px;
   width: 200px;
+
+}
+
+
+.level-title{
+  position: absolute;
+  bottom: 0px;
+  right: 70px;
+  width: 100px;
+  bottom: 230px;
+}
+
+span{
+  font-size: 10px;
+}
+
+.food-modal{
+  position: absolute;
+  bottom: 0px;
+  right: 30px;
+  width: 600px;
+  bottom: 435px;
+  color: #F26D21;
+  font-family: 'Press Start 2P', cursive;
 
 }

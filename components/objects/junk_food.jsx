@@ -3,7 +3,7 @@ import React from 'react';
 class JunkFood extends React.Component{
   constructor(props){
     super(props)
-    this.imgOutputArray = [(<img className="wall" src="assets/candy_apple.png"/>), (<img className="wall" src="assets/candy_bar.png"/>), (<img className="wall" src="assets/birthday_cake.png"/>)];
+    this.imgOutputArray = [(<img className="food" src="assets/candy_apple.png"/>), (<img className="wall" src="assets/candy_bar.png"/>), (<img className="wall" src="assets/birthday_cake.png"/>)];
     this.imgOutput = this.imgOutputArray[Math.floor(Math.random()*3)];
 
   }

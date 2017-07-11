@@ -6837,11 +6837,11 @@ var Board = function (_React$Component) {
       var board = this.props.board;
       return row.map(function (tile, j) {
         return _react2.default.createElement(_tile2.default, {
+          allButtonsCovered: _this3.props.allButtonsCovered,
           x_loc: j,
           y_loc: i,
           state: _this3.props.state,
           tile: tile,
-          updateGame: _this3.props.updateGame,
           key: i * board.gridSize + j });
       });
     }
@@ -11079,13 +11079,18 @@ var Game = function (_React$Component) {
     _this.generalValidation = _this.generalValidation.bind(_this);
     _this.handleJunkFoodPickup = _this.handleJunkFoodPickup.bind(_this);
     _this.handleLevelCompletion = _this.handleLevelCompletion.bind(_this);
+    _this.handleButtonCoverage = _this.handleButtonCoverage.bind(_this);
 
     _this.level = 1;
     _this.state = LevelDetails.level_1();
     _this.impassables = _this.state.wallLoc;
     _this.impassables.push(_this.state.yellowDoorLoc);
     _this.impassables.push(_this.state.redDoorLoc);
+
     _this.remainingJunkFood = _this.state.junkLoc.length;
+
+    _this.foodNotification = false;
+    _this.winNotification = false;
     return _this;
   }
 
@@ -11108,36 +11113,107 @@ var Game = function (_React$Component) {
       document.addEventListener("keyup", this.handleKeyPickup.bind(this));
       document.addEventListener("keyup", this.handleDoorOpening.bind(this));
       document.addEventListener("keyup", this.handleDoorOpening.bind(this));
+      document.addEventListener("keyup", this.handleButtonCoverage.bind(this));
       document.addEventListener("keyup", this.handleLevelCompletion.bind(this));
 
-      if (this.level === 1) {
+      this.level = 3;
+      this.setState(function () {
+        return LevelDetails.level_3();
+      });
+    }
+  }, {
+    key: 'handleLevelCompletion',
+    value: function handleLevelCompletion(e) {
+      var exitLoc = this.state.exitLoc;
+      var buttonsCovered = this.state.allButtonsCovered;
+
+      console.log('Buttons covered?' + buttonsCovered);
+      console.log("everything working?");
+      console.log(this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered);
+      if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered) {
+        if (this.level === 3) {
+          console.log("Winner");
+        } else {
+          console.log("level is complete???");
+          this.level += 1;
+          this.resetEvent();
+          setTimeout(this.levelSwitch, 1000);
+          console.log("level switch fired");
+          this.levelSwitch();
+        }
+      } else if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood > 0) {
+        this.foodNotification = true;
         this.setState(function () {
-          return LevelDetails.level_1();
+          return { keenLoc: { x: 6, y: 1 } };
         });
       }
     }
   }, {
-    key: 'handleLevelCompletion',
-    value: function handleLevelCompletion() {}
+    key: 'buttonsCovered',
+    value: function buttonsCovered() {
+      var buttonLoc = this.state.buttonLoc;
+      var blockLoc = this.state.blockLoc;
+      var boolArray = [];
+      var finalBool = true;
+      buttonLoc.forEach(function (button) {
+        var myBool = blockLoc.some(function (block) {
+          return button['x'] == block['x'] && button['y'] == block['y'];
+        });
+        if (myBool === false) {
+          finalBool = false;
+        }
+      });
+      return finalBool;
+    }
+  }, {
+    key: 'handleButtonCoverage',
+    value: function handleButtonCoverage() {
+      if (this.buttonsCovered()) {
+        this.setState(function () {
+          return { allButtonsCovered: true };
+        });
+      } else {
+        this.setState(function () {
+          return { allButtonsCovered: false };
+        });
+      }
+    }
   }, {
     key: 'handleResetGame',
     value: function handleResetGame(e) {
       if (e.keyCode === 82) {
-        this.impassables = this.state.wallLoc;
-        this.impassables.push(this.state.yellowDoorLoc);
-        this.impassables.push(this.state.redDoorLoc);
-        this.impassables.concat(this.state.junkLoc);
-
-        switch (this.level) {
-          case 1:
-            this.setState(function () {
-              return LevelDetails.level_1();
-            });
-          default:
-            this.setState(function () {
-              return LevelDetails.level_1();
-            });
-        }
+        this.levelSwitch();
+      }
+    }
+  }, {
+    key: 'resetEvent',
+    value: function resetEvent(e) {
+      this.levelSwitch();
+    }
+  }, {
+    key: 'levelSwitch',
+    value: function levelSwitch(e) {
+      this.impassables = this.state.wallLoc.slice();
+      this.impassables.push(this.state.yellowDoorLoc);
+      this.impassables.push(this.state.redDoorLoc);
+      this.impassables.concat(this.state.junkLoc);
+      this.foodNotification = false;
+      switch (this.level) {
+        case 1:
+          this.setState(function () {
+            return LevelDetails.level_1();
+          });
+          break;
+        case 2:
+          this.setState(function () {
+            return LevelDetails.level_2();
+          });
+          break;
+        case 3:
+          this.setState(function () {
+            return LevelDetails.level_3();
+          });
+          break;
       }
     }
   }, {
@@ -11237,17 +11313,9 @@ var Game = function (_React$Component) {
       }
     }
   }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
-      // document.addEventListener("keyup", this.moveBlocks.bind(this));
-
-    }
-  }, {
     key: 'moveBlocks',
     value: function moveBlocks(e) {
       var _this3 = this;
-
-      console.log(this.state);
 
       var keenLoc = this.state.keenLoc;
 
@@ -11269,9 +11337,12 @@ var Game = function (_React$Component) {
         if (!_this3.state.hasRedKey) {
           immovableDoubles.push(_this3.state.redKeyLoc);
         }
-        console.log(_this3.state.junkLoc);
-        immovableDoubles.concat(_this3.state.junkLoc);
-        console.log(immovableDoubles);
+
+        if (_this3.state.junkLoc) {
+          _this3.state.junkLoc.forEach(function (junk) {
+            immovableDoubles.push(junk);
+          });
+        }
 
         var leftImmovables = immovableDoubles.filter(function (el) {
           return _this3.validateKeenLoc(el, { xAdj: -1 });
@@ -11347,7 +11418,7 @@ var Game = function (_React$Component) {
         var _keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
         if (this.impassables.filter(function (el) {
           return _this4.validateKeenLoc(el, { xAdj: 1 });
-        }).length === 0 && _keenLoc['x'] + 1 <= _level_details.BOARD_WIDTH) {
+        }).length === 0 && _keenLoc['x'] + 1 < _level_details.BOARD_WIDTH) {
           this.setState(function (prevState, props) {
             var prev_loc = prevState.keenLoc;
             return { keenLoc: { x: prev_loc['x'] + 1, y: prev_loc['y'] } };
@@ -11359,7 +11430,7 @@ var Game = function (_React$Component) {
         var _keenLoc2 = this.state.keenLoc;
         if (this.impassables.filter(function (el) {
           return _this4.validateKeenLoc(el, { yAdj: 1 });
-        }).length === 0 && _keenLoc2['y'] + 1 <= _level_details.BOARD_LENGTH) {
+        }).length === 0 && _keenLoc2['y'] + 1 < _level_details.BOARD_LENGTH) {
           this.setState(function (prevState, props) {
             var prev_loc = prevState.keenLoc;
             return { keenLoc: { x: prev_loc['x'], y: prev_loc['y'] + 1 } };
@@ -11382,34 +11453,28 @@ var Game = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var modal = void 0;
-      if (this.state.board.lost() || this.state.board.won()) {
-        var text = this.state.board.won() ? "You won!" : "You lost!";
-        modal = _react2.default.createElement(
-          'div',
-          { className: 'modal-screen' },
-          _react2.default.createElement(
-            'div',
-            { className: 'modal-content' },
-            _react2.default.createElement(
-              'p',
-              null,
-              text
-            ),
-            _react2.default.createElement(
-              'button',
-              { onClick: this.restartGame },
-              'Play Again'
-            )
-          )
-        );
-      }
+      var level = _react2.default.createElement(
+        'div',
+        { className: 'level-text' },
+        _react2.default.createElement(
+          'p',
+          null,
+          ' Level ',
+          this.level,
+          ' of 3 '
+        )
+      );
+
+      var foodModal = this.foodNotification ? _react2.default.createElement(
+        'div',
+        { className: 'food-modal' },
+        'Need to collect more food!'
+      ) : _react2.default.createElement('div', { className: 'food-modal' });
 
       return _react2.default.createElement(
         'div',
         { className: 'game-wrapper' },
-        modal,
-        _react2.default.createElement(_board2.default, { state: this.state, board: this.state.board, updateGame: this.updateGame }),
+        _react2.default.createElement(_board2.default, { state: this.state, board: this.state.board, allButtonsCovered: this.state.allButtonsCovered }),
         _react2.default.createElement(
           'section',
           { className: 'key-list-wrapper' },
@@ -11431,7 +11496,15 @@ var Game = function (_React$Component) {
           ' Food Needed: ',
           this.remainingJunkFood,
           ' '
-        )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'level-title' },
+          ' ',
+          level,
+          ' '
+        ),
+        foodModal
       );
     }
   }]);
@@ -11510,9 +11583,9 @@ exports.default = Keen;
 
 
 Object.defineProperty(exports, "__esModule", {
-          value: true
+  value: true
 });
-exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
+exports.level_3 = exports.level_2 = exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
 
 var _commander_keen = __webpack_require__(52);
 
@@ -11532,28 +11605,79 @@ var BOARD_LENGTH = exports.BOARD_LENGTH = 8;
 var board = new commander_keen.Board(BOARD_WIDTH, BOARD_LENGTH);
 
 var level_1 = exports.level_1 = function level_1() {
-          return {
-                    level: 1,
-                    board: board,
-                    keenLoc: { x: 6, y: 1 },
-                    exitLoc: { x: 4, y: 0 },
-                    blockLoc: [{ x: 5, y: 4 }, { x: 6, y: 3 }, { x: 4, y: 6 }, { x: 6, y: 4 }, { x: 4, y: 5 }],
+  return {
+    level: 1,
+    board: board,
+    keenLoc: { x: 6, y: 1 },
+    exitLoc: { x: 4, y: 0 },
+    allButtonsCovered: false,
+    blockLoc: [{ x: 5, y: 4 }, { x: 6, y: 3 }, { x: 4, y: 6 }, { x: 6, y: 4 }, { x: 4, y: 5 }],
+    buttonLoc: [{ x: 3, y: 4 }],
+    yellowDoorLoc: { x: 1, y: 5 },
+    yellowDoorOpen: false,
+    yellowKeyLoc: { x: 6, y: 6 },
+    hasYellowKey: false,
 
-                    yellowDoorLoc: { x: 1, y: 5 },
-                    yellowDoorOpen: false,
-                    yellowKeyLoc: { x: 6, y: 6 },
-                    hasYellowKey: false,
+    redDoorLoc: { x: 4, y: 1 },
+    redDoorOpen: false,
+    redKeyLoc: { x: 1, y: 6 },
+    hasRedKey: false,
 
-                    redDoorLoc: { x: 4, y: 1 },
-                    redDoorOpen: false,
-                    redKeyLoc: { x: 1, y: 6 },
-                    hasRedKey: false,
+    junkLoc: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 2 }],
 
-                    junkLoc: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 2 }],
+    wallLoc: [{ x: 3, y: 1 }, { x: 5, y: 1 }, { x: 2, y: 5 }, { x: 2, y: 6 }, { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 5, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
 
-                    wallLoc: [{ x: 3, y: 1 }, { x: 5, y: 1 }, { x: 2, y: 5 }, { x: 2, y: 6 }, { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 5, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
+  };
+};
 
-          };
+var level_2 = exports.level_2 = function level_2() {
+  return {
+    level: 2,
+    board: board,
+    keenLoc: { x: 6, y: 1 },
+    exitLoc: { x: 0, y: 6 },
+    allButtonsCovered: false,
+    buttonLoc: [{ x: 3, y: 1 }, { x: 3, y: 4 }, { x: 5, y: 4 }],
+    blockLoc: [{ x: 5, y: 1 }, { x: 6, y: 6 }, { x: 6, y: 4 }, { x: 1, y: 2 }, { x: 1, y: 2 }, { x: 3, y: 2 }, { x: 4, y: 2 }, { x: 5, y: 2 }, { x: 4, y: 4 }, { x: 6, y: 2 }, { x: 2, y: 6 }, { x: 2, y: 4 }, { x: 4, y: 5 }, { x: 5, y: 5 }],
+
+    yellowDoorLoc: { x: 1, y: 1 },
+    yellowDoorOpen: false,
+    yellowKeyLoc: { x: 6, y: 5 },
+    hasYellowKey: false,
+
+    redDoorLoc: { x: 1, y: 6 },
+    redDoorOpen: false,
+    redKeyLoc: { x: 0, y: 1 },
+    hasRedKey: false,
+
+    junkLoc: [{ x: 5, y: 7 }, { x: 2, y: 2 }, { x: 6, y: 3 }],
+    wallLoc: [{ x: 0, y: 0 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 3, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
+  };
+};
+var level_3 = exports.level_3 = function level_3() {
+  return {
+    level: 3,
+    board: board,
+    keenLoc: { x: 7, y: 0 },
+    exitLoc: { x: 6, y: 6 },
+    allButtonsCovered: false,
+
+    buttonLoc: [{ x: 3, y: 2 }, { x: 4, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 3 }, { x: 2, y: 3 }, { x: 5, y: 3 }, { x: 4, y: 3 }, { x: 4, y: 4 }, { x: 3, y: 4 }, { x: 0, y: 0 }, { x: 7, y: 7 }],
+    blockLoc: [{ x: 3, y: 1 }, { x: 4, y: 1 }, { x: 2, y: 2 }, { x: 5, y: 2 }, { x: 1, y: 3 }, { x: 6, y: 3 }, { x: 5, y: 4 }, { x: 2, y: 4 }, { x: 3, y: 5 }, { x: 4, y: 5 }],
+
+    yellowDoorLoc: { x: 1, y: -1 },
+    yellowDoorOpen: false,
+    yellowKeyLoc: { x: 6, y: -5 },
+    hasYellowKey: false,
+
+    redDoorLoc: { x: 1, y: -6 },
+    redDoorOpen: false,
+    redKeyLoc: { x: 0, y: -1 },
+    hasRedKey: false,
+
+    junkLoc: [],
+    wallLoc: []
+  };
 };
 
 /***/ }),
@@ -11599,7 +11723,7 @@ var Block = function (_React$Component) {
       if (this.props.blockLoc) {
         blockSprite = this.props.blockLoc.filter(function (el) {
           return el['x'] === _this2.props.tileXLoc && el['y'] === _this2.props.tileYLoc;
-        }).length > 0 ? _react2.default.createElement('img', { className: 'wall', src: 'assets/block_keen.png' }) : "";
+        }).length > 0 ? _react2.default.createElement('img', { className: 'block', src: 'assets/block_keen.png' }) : "";
       }
       return _react2.default.createElement(
         'div',
@@ -11651,7 +11775,7 @@ var Exit = function (_React$Component) {
   _createClass(Exit, [{
     key: "render",
     value: function render() {
-      var redDoor = this.props.tileXLoc === this.props.exitXLoc && this.props.tileYLoc === this.props.exitYLoc ? _react2.default.createElement("img", { className: "keys", src: "assets/done.png" }) : "";
+      var redDoor = this.props.tileXLoc === this.props.exitXLoc && this.props.tileYLoc === this.props.exitYLoc && this.props.allButtonsCovered ? _react2.default.createElement("img", { className: "exit-loc", src: "assets/done.png" }) : "";
       return _react2.default.createElement(
         "div",
         null,
@@ -11698,7 +11822,7 @@ var JunkFood = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (JunkFood.__proto__ || Object.getPrototypeOf(JunkFood)).call(this, props));
 
-    _this.imgOutputArray = [_react2.default.createElement("img", { className: "wall", src: "assets/candy_apple.png" }), _react2.default.createElement("img", { className: "wall", src: "assets/candy_bar.png" }), _react2.default.createElement("img", { className: "wall", src: "assets/birthday_cake.png" })];
+    _this.imgOutputArray = [_react2.default.createElement("img", { className: "food", src: "assets/candy_apple.png" }), _react2.default.createElement("img", { className: "wall", src: "assets/candy_bar.png" }), _react2.default.createElement("img", { className: "wall", src: "assets/birthday_cake.png" })];
     _this.imgOutput = _this.imgOutputArray[Math.floor(Math.random() * 3)];
 
     return _this;
@@ -11769,7 +11893,6 @@ var KeyList = function (_React$Component) {
   _createClass(KeyList, [{
     key: 'render',
     value: function render() {
-      // console.log(this.props)
       var redKeySprite = this.props['hasRedKey'] ? _react2.default.createElement('img', { className: 'label-key-1', src: 'assets/red_key.png' }) : _react2.default.createElement('img', { className: 'label-key-1', src: 'assets/empty_key.png' });
 
       var yellowKeySprite = this.props['hasYellowKey'] ? _react2.default.createElement('img', { className: 'label-key-2', src: 'assets/yellow_key.png' }) : _react2.default.createElement('img', { className: 'label-key-2', src: 'assets/empty_key.png' });
@@ -12163,91 +12286,96 @@ var Tile = function (_React$Component) {
   function Tile(props) {
     _classCallCheck(this, Tile);
 
-    var _this = _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, props));
-
-    _this.handleClick = _this.handleClick.bind(_this);
-
-    return _this;
+    return _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, props));
   }
 
   _createClass(Tile, [{
-    key: 'handleClick',
-    value: function handleClick(e) {
-      var flagged = e.altKey ? true : false;
-      this.props.updateGame(this.props.tile, flagged);
-    }
-  }, {
-    key: 'keenRender',
-    value: function keenRender(e) {}
-  }, {
     key: 'render',
     value: function render() {
-      var klass = 'unexplored';
-      klass = 'tile ' + klass;
+      var tileXLoc = this.props['x_loc'];
+      var tileYLoc = this.props['y_loc'];
+
+      var keenXLoc = this.props.state.keenLoc['x'];
+      var keenYLoc = this.props.state.keenLoc['y'];
+      // let buttonXLoc = this.props.state.buttonLoc['x'];
+      // let buttonYLoc = this.props.state.buttonLoc['y'];
+      var klass = 'tile unexplored';
+      if (this.props.state.buttonLoc) {
+        var filterSet = this.props.state.buttonLoc.filter(function (loc) {
+          return loc['x'] === tileXLoc && loc['y'] === tileYLoc;
+        });
+        if (filterSet.length > 0) {
+          klass = 'tile button-tile';
+        }
+      }
+
       var renderOutput = this.props.state.wallLoc ? _react2.default.createElement(
         'section',
         { className: 'back-image' },
         _react2.default.createElement(
           'div',
-          { className: klass, onClick: this.handleClick },
-          _react2.default.createElement(_keen2.default, { tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc'],
-            keenXLoc: this.props.state.keenLoc['x'],
-            keenYLoc: this.props.state.keenLoc['y']
+          { className: klass },
+          _react2.default.createElement(_keen2.default, {
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
+            keenXLoc: keenXLoc,
+            keenYLoc: keenYLoc
           }),
           _react2.default.createElement(_block2.default, {
-            tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc']
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc
             // blockXLoc={this.props.state.blockLoc.map( (el) => el['x'] )}
             // blockYLoc={this.props.state.blockLoc.map( (el) => el['y'] )}
             , blockLoc: this.props.state.blockLoc
           }),
-          _react2.default.createElement(_yellow_key2.default, { tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc'],
+          _react2.default.createElement(_yellow_key2.default, {
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
             yellowXLoc: this.props.state.yellowKeyLoc['x'],
             yellowYLoc: this.props.state.yellowKeyLoc['y'],
             hasYellowKey: this.props.state.hasYellowKey
 
           }),
-          _react2.default.createElement(_red_key2.default, { tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc'],
+          _react2.default.createElement(_red_key2.default, {
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
             redXLoc: this.props.state.redKeyLoc['x'],
             redYLoc: this.props.state.redKeyLoc['y'],
             hasRedKey: this.props.state.hasRedKey
           }),
           _react2.default.createElement(_wall2.default, {
-            tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc']
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc
             // wallXLoc={this.props.state.wallLoc.map( (el) => el['x'] )}
             // wallYLoc={this.props.state.wallLoc.map( (el) => el['y'] )}
             , wallLoc: this.props.state.wallLoc
           }),
           _react2.default.createElement(_yellow_door2.default, {
             keenLoc: this.props.state.keenLoc,
-            tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc'],
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
             yellowXLoc: this.props.state.yellowDoorLoc['x'],
             yellowYLoc: this.props.state.yellowDoorLoc['y'],
             yellowDoorOpen: this.props.state.yellowDoorOpen
           }),
           _react2.default.createElement(_red_door2.default, {
             keenLoc: this.props.state.keenLoc,
-            tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc'],
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
             redXLoc: this.props.state.redDoorLoc['x'],
             redYLoc: this.props.state.redDoorLoc['y'],
             redDoorOpen: this.props.state.redDoorOpen
           }),
           _react2.default.createElement(_exit2.default, {
-            tileXLoc: this.props['x_loc'],
-
-            tileYLoc: this.props['y_loc'],
+            allButtonsCovered: this.props.allButtonsCovered,
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
             exitXLoc: this.props.state.exitLoc['x'],
             exitYLoc: this.props.state.exitLoc['y']
           }),
           _react2.default.createElement(_junk_food2.default, {
-            tileXLoc: this.props['x_loc'],
-            tileYLoc: this.props['y_loc'],
+            tileXLoc: tileXLoc,
+            tileYLoc: tileYLoc,
             junkLoc: this.props.state.junkLoc
           })
         )
