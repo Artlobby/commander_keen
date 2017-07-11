@@ -11116,9 +11116,9 @@ var Game = function (_React$Component) {
       document.addEventListener("keyup", this.handleButtonCoverage.bind(this));
       document.addEventListener("keyup", this.handleLevelCompletion.bind(this));
 
-      this.level = 3;
+      this.level = 1;
       this.setState(function () {
-        return LevelDetails.level_3();
+        return LevelDetails.level_1();
       });
     }
   }, {
@@ -11358,29 +11358,29 @@ var Game = function (_React$Component) {
         });
 
         var blockLocOutput = _this3.state.blockLoc.map(function (blockObj, id) {
-          if (_this3.validateKeenLoc(blockObj) && blockObj['x'] > 0) {
-            if ((e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length === 0) {
+          if (_this3.validateKeenLoc(blockObj)) {
+            if ((e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length === 0 && blockObj['x'] > 0) {
               return { x: keenLoc['x'] - 1, y: prevLoc['y'] };
-            } else if ((e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length > 0) {
+            } else if ((e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length > 0 && blockObj['x'] > 0) {
               _this3.setState(function () {
                 return { keenLoc: { x: prevLoc['x'] + 1, y: prevLoc['y'] } };
               });
               return prevState.blockLoc[id];
-            } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length === 0) {
+            } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length === 0 && blockObj['x'] < _level_details.BOARD_WIDTH - 1) {
               return { x: keenLoc['x'] + 1, y: prevLoc['y'] };
-            } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length > 0) {
+            } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length > 0 && blockObj['x'] < _level_details.BOARD_WIDTH - 1) {
               _this3.setState(function () {
                 return { keenLoc: { x: prevLoc['x'] - 1, y: prevLoc['y'] } };
               });
               return prevState.blockLoc[id];
-            } else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length === 0) {
+            } else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length === 0 && blockObj['y'] < _level_details.BOARD_WIDTH - 1) {
               return { x: keenLoc['x'], y: prevLoc['y'] + 1 };
             } else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length > 0) {
               _this3.setState(function () {
                 return { keenLoc: { x: prevLoc['x'], y: prevLoc['y'] - 1 } };
               });
               return prevState.blockLoc[id];
-            } else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length === 0) {
+            } else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length === 0 && blockObj['y'] > 0) {
               return { x: keenLoc['x'], y: prevLoc['y'] - 1 };
             } else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length > 0) {
               _this3.setState(function () {
@@ -11585,7 +11585,7 @@ exports.default = Keen;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.level_3 = exports.level_2 = exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
+exports.level_2 = exports.level_3 = exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
 
 var _commander_keen = __webpack_require__(52);
 
@@ -11611,7 +11611,7 @@ var level_1 = exports.level_1 = function level_1() {
     keenLoc: { x: 6, y: 1 },
     exitLoc: { x: 4, y: 0 },
     allButtonsCovered: false,
-    blockLoc: [{ x: 5, y: 4 }, { x: 6, y: 3 }, { x: 4, y: 6 }, { x: 6, y: 4 }, { x: 4, y: 5 }],
+    blockLoc: [{ x: 2, y: 4 }, { x: 5, y: 4 }, { x: 6, y: 3 }, { x: 4, y: 6 }, { x: 6, y: 4 }, { x: 4, y: 5 }],
     buttonLoc: [{ x: 3, y: 4 }],
     yellowDoorLoc: { x: 1, y: 5 },
     yellowDoorOpen: false,
@@ -11630,9 +11630,9 @@ var level_1 = exports.level_1 = function level_1() {
   };
 };
 
-var level_2 = exports.level_2 = function level_2() {
+var level_3 = exports.level_3 = function level_3() {
   return {
-    level: 2,
+    level: 3,
     board: board,
     keenLoc: { x: 6, y: 1 },
     exitLoc: { x: 0, y: 6 },
@@ -11654,29 +11654,29 @@ var level_2 = exports.level_2 = function level_2() {
     wallLoc: [{ x: 0, y: 0 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 3, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
   };
 };
-var level_3 = exports.level_3 = function level_3() {
+var level_2 = exports.level_2 = function level_2() {
   return {
-    level: 3,
+    level: 2,
     board: board,
     keenLoc: { x: 7, y: 0 },
-    exitLoc: { x: 6, y: 6 },
+    exitLoc: { x: 3, y: 6 },
     allButtonsCovered: false,
 
     buttonLoc: [{ x: 3, y: 2 }, { x: 4, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 3 }, { x: 2, y: 3 }, { x: 5, y: 3 }, { x: 4, y: 3 }, { x: 4, y: 4 }, { x: 3, y: 4 }, { x: 0, y: 0 }, { x: 7, y: 7 }],
     blockLoc: [{ x: 3, y: 1 }, { x: 4, y: 1 }, { x: 2, y: 2 }, { x: 5, y: 2 }, { x: 1, y: 3 }, { x: 6, y: 3 }, { x: 5, y: 4 }, { x: 2, y: 4 }, { x: 3, y: 5 }, { x: 4, y: 5 }],
 
-    yellowDoorLoc: { x: 1, y: -1 },
+    yellowDoorLoc: { x: 7, y: 6 },
     yellowDoorOpen: false,
-    yellowKeyLoc: { x: 6, y: -5 },
+    yellowKeyLoc: { x: 4, y: 3 },
     hasYellowKey: false,
 
-    redDoorLoc: { x: 1, y: -6 },
+    redDoorLoc: { x: 0, y: 1 },
     redDoorOpen: false,
-    redKeyLoc: { x: 0, y: -1 },
+    redKeyLoc: { x: 3, y: 3 },
     hasRedKey: false,
 
     junkLoc: [],
-    wallLoc: []
+    wallLoc: [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 1 }, { x: 6, y: 6 }, { x: 6, y: 7 }]
   };
 };
 
@@ -11974,7 +11974,7 @@ var RedDoor = function (_React$Component) {
         redDoorSprite = _react2.default.createElement("img", { className: "keys", src: "assets/red_door_keen.png" });
       }
       if (this.props.tileXLoc === this.props.redXLoc && this.props.tileYLoc === this.props.redYLoc && this.props.redDoorOpen) {
-        redDoorSprite = _react2.default.createElement("img", { className: "keys", src: "assets/red_door_keen_open.png" });
+        redDoorSprite = "";
       }
 
       if (this.props.tileXLoc === this.props.keenLoc['x'] && this.props.tileYLoc === this.props.keenLoc['y']) {
@@ -12146,7 +12146,7 @@ var YellowDoor = function (_React$Component) {
         yellowDoorSprite = _react2.default.createElement("img", { className: "keys", src: "assets/yellow_door_keen.png" });
       }
       if (this.props.tileXLoc === this.props.yellowXLoc && this.props.tileYLoc === this.props.yellowYLoc && this.props.yellowDoorOpen) {
-        yellowDoorSprite = _react2.default.createElement("img", { className: "keys", src: "assets/yellow_door_keen_open.png" });
+        yellowDoorSprite = "";
       }
 
       if (this.props.tileXLoc === this.props.keenLoc['x'] && this.props.tileYLoc === this.props.keenLoc['y']) {

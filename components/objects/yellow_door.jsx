@@ -9,7 +9,7 @@ class YellowDoor extends React.Component{
       yellowDoorSprite = (<img className="keys" src="assets/yellow_door_keen.png"/>);
     }
     if (this.props.tileXLoc === this.props.yellowXLoc && this.props.tileYLoc === this.props.yellowYLoc && this.props.yellowDoorOpen){
-      yellowDoorSprite = (<img className="keys" src="assets/yellow_door_keen_open.png"/>);
+      yellowDoorSprite = ("");
     }
 
     if (this.props.tileXLoc === this.props.keenLoc['x'] && this.props.tileYLoc === this.props.keenLoc['y']){

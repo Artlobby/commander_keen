@@ -15,6 +15,7 @@ export const level_1 = () => {
       exitLoc: {x: 4, y: 0},
       allButtonsCovered: false,
       blockLoc: [
+                  {x: 2, y: 4},
                   {x: 5, y: 4},
                   {x: 6, y: 3},
                   {x: 4, y: 6},
@@ -75,9 +76,9 @@ export const level_1 = () => {
   };
 };
 
-export const level_2 = () => {
+export const level_3 = () => {
   return {
-      level: 2,
+      level: 3,
       board: board,
       keenLoc: {x: 6, y: 1},
       exitLoc: {x: 0, y: 6},
@@ -145,12 +146,12 @@ export const level_2 = () => {
               ],
   };
 };
-export const level_3 = () => {
+export const level_2 = () => {
   return {
-      level: 3,
+      level: 2,
       board: board,
       keenLoc: {x: 7, y: 0},
-      exitLoc: {x: 6, y: 6},
+      exitLoc: {x: 3, y: 6},
       allButtonsCovered: false,
 
       buttonLoc: [
@@ -183,17 +184,21 @@ export const level_3 = () => {
 
       ],
 
-      yellowDoorLoc: {x: 1, y: -1},
+      yellowDoorLoc: {x: 7, y: 6},
       yellowDoorOpen: false,
-      yellowKeyLoc: {x: 6, y: -5},
+      yellowKeyLoc: {x: 4, y: 3},
       hasYellowKey: false,
 
-      redDoorLoc: { x: 1, y: -6 },
+      redDoorLoc: { x: 0, y: 1 },
       redDoorOpen: false,
-      redKeyLoc: {x: 0, y: -1},
+      redKeyLoc: {x: 3, y: 3},
       hasRedKey: false,
 
       junkLoc: [],
-      wallLoc: [],
+      wallLoc: [{x: 1, y: 0},
+                {x: 1, y: 1},
+                {x: 1, y: 1},
+                {x: 6, y: 6},
+                {x: 6, y: 7},],
   };
 };

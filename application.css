@@ -24,10 +24,34 @@ p{
 
 }
 
-.mainpage-title{
+p.mainpage-instructions {
+    position: absolute;
+    top: 400px;
+    left: 30px;
+    width: 400px;
+    text-align: left;
+    font-size: 20px;
+    font-family: "Helvetica Neue"
 
 
 }
+
+
+.mainpage-title{
+  position: absolute;
+  height: 300px;
+  width: 400px;
+  left: 30px;
+  top: 150px;
+  text-align: left;
+
+}
+
+.block-text{
+  position: relative;
+  top: 13px;
+}
+
 
 #background-body{
   background-image: url('game_boy.png');

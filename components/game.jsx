@@ -58,9 +58,9 @@ class Game extends React.Component{
     document.addEventListener("keyup", this.handleButtonCoverage.bind(this));
     document.addEventListener("keyup", this.handleLevelCompletion.bind(this));
 
-    this.level = 3;
+    this.level = 1;
     this.setState( () => {
-        return LevelDetails.level_3();
+        return LevelDetails.level_1();
       }
     );
 
@@ -284,24 +284,24 @@ class Game extends React.Component{
       let upImmovables = immovableDoubles.filter( (el) => (this.validateKeenLoc(el, {yAdj: -1})));
 
       let blockLocOutput = this.state.blockLoc.map( (blockObj, id) => {
-        if ( this.validateKeenLoc(blockObj) && blockObj['x'] > 0) {
-              if ( (e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length === 0){
+        if ( this.validateKeenLoc(blockObj)) {
+              if ( (e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length === 0 && blockObj['x'] > 0){
                 return {x: keenLoc['x']-1, y: prevLoc['y']};
-              } else if ( (e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length > 0) {
+              } else if ( (e.keyCode === 65 || e.keyCode === 37) && leftImmovables.length > 0  && blockObj['x'] > 0) {
                 this.setState( () => {
                   return { keenLoc: {x: prevLoc['x']+1, y: prevLoc['y']} };
                 });
                 return prevState.blockLoc[id];
               }
-              else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length === 0){
+              else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length === 0 && blockObj['x'] < BOARD_WIDTH-1){
                 return {x: keenLoc['x']+1, y: prevLoc['y']};
-              } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length > 0){
+              } else if ((e.keyCode === 68 || e.keyCode === 39) && rightImmovables.length > 0 && blockObj['x'] < BOARD_WIDTH-1){
                 this.setState( () => {
                   return { keenLoc: {x: prevLoc['x']-1, y: prevLoc['y']} };
                 });
                 return prevState.blockLoc[id];
               }
-              else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length === 0) {
+              else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length === 0 && blockObj['y'] < BOARD_WIDTH-1) {
                 return {x: keenLoc['x'], y: prevLoc['y']+1};
               } else if ((e.keyCode === 83 || e.keyCode === 40) && downImmovables.length > 0) {
                 this.setState( () => {
@@ -309,7 +309,7 @@ class Game extends React.Component{
                 });
                 return prevState.blockLoc[id];
               }
-              else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length === 0){
+              else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length === 0 && blockObj['y'] > 0){
                 return {x: keenLoc['x'], y: prevLoc['y']-1};
               } else if ((e.keyCode === 87 || e.keyCode === 38) && upImmovables.length > 0){
                 this.setState( () => {
