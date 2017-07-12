@@ -11091,6 +11091,7 @@ var Game = function (_React$Component) {
 
     _this.foodNotification = false;
     _this.winNotification = false;
+    _this.winner = false;
     return _this;
   }
 
@@ -11126,19 +11127,15 @@ var Game = function (_React$Component) {
     value: function handleLevelCompletion(e) {
       var exitLoc = this.state.exitLoc;
       var buttonsCovered = this.state.allButtonsCovered;
-
-      console.log('Buttons covered?' + buttonsCovered);
-      console.log("everything working?");
-      console.log(this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered);
       if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered) {
         if (this.level === 3) {
-          console.log("Winner");
+          this.setState(function () {
+            return { winner: true };
+          });
         } else {
-          console.log("level is complete???");
           this.level += 1;
           this.resetEvent();
           setTimeout(this.levelSwitch, 1000);
-          console.log("level switch fired");
           this.levelSwitch();
         }
       } else if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood > 0) {
@@ -11453,6 +11450,7 @@ var Game = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var winnerBubble = this.state.winner ? _react2.default.createElement('img', { id: 'pixel-bubble', src: 'assets/pixel-bubble.gif' }) : "";
       var level = _react2.default.createElement(
         'div',
         { className: 'level-text' },
@@ -11504,7 +11502,8 @@ var Game = function (_React$Component) {
           level,
           ' '
         ),
-        foodModal
+        foodModal,
+        winnerBubble
       );
     }
   }]);
@@ -11585,7 +11584,7 @@ exports.default = Keen;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.level_2 = exports.level_3 = exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
+exports.level_3 = exports.level_2 = exports.level_1 = exports.BOARD_LENGTH = exports.BOARD_WIDTH = undefined;
 
 var _commander_keen = __webpack_require__(52);
 
@@ -11630,30 +11629,6 @@ var level_1 = exports.level_1 = function level_1() {
   };
 };
 
-var level_3 = exports.level_3 = function level_3() {
-  return {
-    level: 3,
-    board: board,
-    keenLoc: { x: 6, y: 1 },
-    exitLoc: { x: 0, y: 6 },
-    allButtonsCovered: false,
-    buttonLoc: [{ x: 3, y: 1 }, { x: 3, y: 4 }, { x: 5, y: 4 }],
-    blockLoc: [{ x: 5, y: 1 }, { x: 6, y: 6 }, { x: 6, y: 4 }, { x: 1, y: 2 }, { x: 1, y: 2 }, { x: 3, y: 2 }, { x: 4, y: 2 }, { x: 5, y: 2 }, { x: 4, y: 4 }, { x: 6, y: 2 }, { x: 2, y: 6 }, { x: 2, y: 4 }, { x: 4, y: 5 }, { x: 5, y: 5 }],
-
-    yellowDoorLoc: { x: 1, y: 1 },
-    yellowDoorOpen: false,
-    yellowKeyLoc: { x: 6, y: 5 },
-    hasYellowKey: false,
-
-    redDoorLoc: { x: 1, y: 6 },
-    redDoorOpen: false,
-    redKeyLoc: { x: 0, y: 1 },
-    hasRedKey: false,
-
-    junkLoc: [{ x: 5, y: 7 }, { x: 2, y: 2 }, { x: 6, y: 3 }],
-    wallLoc: [{ x: 0, y: 0 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 3, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
-  };
-};
 var level_2 = exports.level_2 = function level_2() {
   return {
     level: 2,
@@ -11677,6 +11652,32 @@ var level_2 = exports.level_2 = function level_2() {
 
     junkLoc: [],
     wallLoc: [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 1 }, { x: 6, y: 6 }, { x: 6, y: 7 }]
+  };
+};
+
+var level_3 = exports.level_3 = function level_3() {
+  return {
+    winner: false,
+    level: 3,
+    board: board,
+    keenLoc: { x: 6, y: 1 },
+    exitLoc: { x: 0, y: 6 },
+    allButtonsCovered: false,
+    buttonLoc: [{ x: 3, y: 1 }, { x: 3, y: 4 }, { x: 5, y: 4 }],
+    blockLoc: [{ x: 5, y: 1 }, { x: 6, y: 6 }, { x: 6, y: 4 }, { x: 1, y: 2 }, { x: 1, y: 2 }, { x: 3, y: 2 }, { x: 4, y: 2 }, { x: 5, y: 2 }, { x: 4, y: 4 }, { x: 6, y: 2 }, { x: 2, y: 6 }, { x: 2, y: 4 }, { x: 4, y: 5 }, { x: 5, y: 5 }],
+
+    yellowDoorLoc: { x: 1, y: 1 },
+    yellowDoorOpen: false,
+    yellowKeyLoc: { x: 6, y: 5 },
+    hasYellowKey: false,
+
+    redDoorLoc: { x: 1, y: 6 },
+    redDoorOpen: false,
+    redKeyLoc: { x: 0, y: 1 },
+    hasRedKey: false,
+
+    junkLoc: [{ x: 5, y: 7 }, { x: 2, y: 2 }, { x: 6, y: 3 }],
+    wallLoc: [{ x: 0, y: 0 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 7 }, { x: 1, y: 7 }, { x: 2, y: 7 }, { x: 3, y: 7 }, { x: 4, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 0 }, { x: 7, y: 1 }, { x: 7, y: 2 }, { x: 7, y: 3 }, { x: 7, y: 4 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 1, y: 0 }, { x: 3, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }]
   };
 };
 

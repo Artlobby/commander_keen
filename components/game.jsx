@@ -32,6 +32,7 @@ class Game extends React.Component{
 
     this.foodNotification = false;
     this.winNotification = false;
+    this.winner = false;
   }
 
   restartGame() {
@@ -69,19 +70,16 @@ class Game extends React.Component{
   handleLevelCompletion(e){
     let exitLoc = this.state.exitLoc;
     let buttonsCovered = this.state.allButtonsCovered;
-
-    console.log(`Buttons covered?` + buttonsCovered);
-    console.log("everything working?")
-    console.log(this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered);
     if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood === 0 && buttonsCovered) {
       if (this.level === 3){
-        console.log("Winner");
+        this.setState( () => {
+            return {winner: true};
+          }
+        );
       } else {
-        console.log("level is complete???")
         this.level += 1;
         this.resetEvent();
         setTimeout(this.levelSwitch, 1000);
-        console.log("level switch fired");
         this.levelSwitch();
       }
     } else if (this.validateKeenLoc(exitLoc) && this.remainingJunkFood > 0) {
@@ -377,6 +375,7 @@ class Game extends React.Component{
   }
 
   render() {
+      let winnerBubble = this.state.winner ? (<img id="pixel-bubble" src="assets/pixel-bubble.gif"/>) : "";
       let level =
       <div className="level-text">
         <p> Level {this.level} of 3 </p>
@@ -402,6 +401,7 @@ class Game extends React.Component{
         <div className="remaining-food-title"> Food Needed: {this.remainingJunkFood} </div>
         <div className="level-title"> {level} </div>
         {foodModal}
+        {winnerBubble}
       </div>
     );
   }

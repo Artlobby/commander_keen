@@ -294,5 +294,11 @@ span{
   bottom: 435px;
   color: #F26D21;
   font-family: 'Press Start 2P', cursive;
+}
 
+img#pixel-bubble{
+    position: relative;
+    bottom: 300px;
+    left: -300px;
+    z-index: 5;
 }
