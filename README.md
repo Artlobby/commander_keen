@@ -13,3 +13,4 @@ As a turn-based, tile-based game, a Chip's Challenge clone with Commander Keen s
 
 I want to show how React components can enable dry, well-organized code, and picked a game that favors a great deal of object-oriented programming.  Lastly, by avoiding any game libraries whatsoever and using a general framework like React, I can demonstrate that I deeply understand the capabilities of React.
 
+![Gameboy](http://i.imgur.com/fAX7PFK.png)
