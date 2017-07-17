@@ -2,8 +2,6 @@
 [Live Site](http://commanderkeen.io)
 
 
-## Commander Keen:  ReactJS Edition
-
 ### Background
 
 Chip's Challenge is a classic tile-based puzzle game originally published by Epyx, and was later included in the Windows 3.1 Microsoft Entertainment Pack 4. The original Chips Challenge is a 1-player game that plays out on a grid.  Each grid item can be either chip, a key, a block, a door, or a wall.  There are also special items.
