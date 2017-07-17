@@ -1,10 +1,14 @@
-import Board from './board';
 import React from 'react';
+
 import * as commander_keen from '../commander_keen';
 import * as LevelDetails from './level_details';
-import { merge } from 'lodash';
-import { BOARD_WIDTH, BOARD_LENGTH } from './level_details';
+
+import Board from './board';
+import GameboyController from './gameboy_controller';
 import KeyList from './objects/key_list.jsx';
+
+import { BOARD_WIDTH, BOARD_LENGTH } from './level_details';
+import { merge } from 'lodash';
 
 class Game extends React.Component{
   constructor(props) {
@@ -374,23 +378,30 @@ class Game extends React.Component{
       }
   }
 
+
+  leftButton(){
+    console.log("left button firing from gameboy");
+  }
+
   render() {
-      let winnerBubble = this.state.winner ? (<img id="pixel-bubble" src="assets/pixel-bubble.gif"/>) : "";
-      let level =
-      <div className="level-text">
-        <p> Level {this.level} of 3 </p>
-      </div>
+    let winnerBubble = this.state.winner ? (<img id="pixel-bubble" src="assets/pixel-bubble.gif"/>) : "";
+    let level =
+    <div className="level-text">
+      <p> Level {this.level} of 3 </p>
+    </div>
 
-      let foodModal =
-      this.foodNotification ?
-      (<div className="food-modal">
-        Need to collect more food!
-      </div>) : (<div className="food-modal">
 
-                </div>);
+
+
+    let foodModal =
+    this.foodNotification ?
+    (<div className="food-modal">
+      Need to collect more food!
+    </div>) : (<div className="food-modal">
+
+              </div>);
 
     return (
-
       <div className="game-wrapper">
         <Board state={ this.state } board={this.state.board} allButtonsCovered={this.state.allButtonsCovered} />
         <section className="key-list-wrapper">
@@ -398,10 +409,12 @@ class Game extends React.Component{
           <KeyList hasRedKey={this.state.hasRedKey} hasYellowKey={this.state.hasYellowKey} />
           <div className="spacer"> </div>
         </section>
+        <img id="background-body" src="http://i.imgur.com/HLqzt6p.png" />
         <div className="remaining-food-title"> Food Needed: {this.remainingJunkFood} </div>
         <div className="level-title"> {level} </div>
         {foodModal}
         {winnerBubble}
+        {/* <GameboyController leftButton={this.leftButton} /> */}
       </div>
     );
   }
