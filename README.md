@@ -1,2 +1,2 @@
 # commander_keen
-![Live Site](http://commanderkeen.io)
+[Live Site](http://commanderkeen.io)
