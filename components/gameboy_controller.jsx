@@ -4,7 +4,12 @@ class GameboyController extends React.Component{
 
   render(){
     return (
-      <div onClick={this.props.leftButton} className="blue-square"> HELLO </div>
+    <div>
+      <div onMouseUp={this.props.moveUp} className="top-square">  </div>
+      <div onMouseUp={this.props.moveLeft} className="left-square">  </div>
+      <div onMouseUp={this.props.moveRight} className="right-square">  </div>
+      <div onMouseUp={this.props.buttonDown} className="bottom-square">  </div>
+    </div>
     )
 
   }

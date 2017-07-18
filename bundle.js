@@ -11072,8 +11072,6 @@ var Game = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
 
-    _this.restartGame = _this.restartGame.bind(_this);
-    _this.updateGame = _this.updateGame.bind(_this);
     _this.handleInputs = _this.handleInputs.bind(_this);
     _this.moveBlocks = _this.moveBlocks.bind(_this);
     _this.handleResetGame = _this.handleResetGame.bind(_this);
@@ -11100,15 +11098,6 @@ var Game = function (_React$Component) {
   }
 
   _createClass(Game, [{
-    key: 'restartGame',
-    value: function restartGame() {}
-  }, {
-    key: 'updateGame',
-    value: function updateGame(tile, flagged) {}
-  }, {
-    key: 'illegalMoveObjects',
-    value: function illegalMoveObjects(e) {}
-  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       document.addEventListener("keyup", this.handleJunkFoodPickup.bind(this));
@@ -11319,7 +11308,6 @@ var Game = function (_React$Component) {
       var _this3 = this;
 
       var keenLoc = this.state.keenLoc;
-
       this.setState(function (prevState, props) {
         var prevLoc = prevState.keenLoc;
         var newLoc = _this3.state.keenLoc;
@@ -11401,60 +11389,101 @@ var Game = function (_React$Component) {
   }, {
     key: 'handleInputs',
     value: function handleInputs(e) {
-      var _this4 = this;
-
       if (e.keyCode === 65 || e.keyCode === 37) {
-        var keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
-        if (this.impassables.filter(function (el) {
-          return _this4.validateKeenLoc(el, { xAdj: -1 });
-        }).length === 0 && keenLoc['x'] - 1 >= 0) {
-          this.setState(function (prevState, props) {
-            var prev_loc = prevState.keenLoc;
-            return { keenLoc: { x: prev_loc['x'] - 1, y: prev_loc['y'] } };
-          });
-        }
+        this.moveLeft();
       }
 
       if (e.keyCode === 68 || e.keyCode === 39) {
-        var _keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
-        if (this.impassables.filter(function (el) {
-          return _this4.validateKeenLoc(el, { xAdj: 1 });
-        }).length === 0 && _keenLoc['x'] + 1 < _level_details.BOARD_WIDTH) {
-          this.setState(function (prevState, props) {
-            var prev_loc = prevState.keenLoc;
-            return { keenLoc: { x: prev_loc['x'] + 1, y: prev_loc['y'] } };
-          });
-        }
+        this.moveRight();
       }
 
       if (e.keyCode === 83 || e.keyCode === 40) {
-        var _keenLoc2 = this.state.keenLoc;
-        if (this.impassables.filter(function (el) {
-          return _this4.validateKeenLoc(el, { yAdj: 1 });
-        }).length === 0 && _keenLoc2['y'] + 1 < _level_details.BOARD_LENGTH) {
-          this.setState(function (prevState, props) {
-            var prev_loc = prevState.keenLoc;
-            return { keenLoc: { x: prev_loc['x'], y: prev_loc['y'] + 1 } };
-          });
-        }
+        this.moveDown();
       }
 
       if (e.keyCode === 87 || e.keyCode === 38) {
-        var _keenLoc3 = this.state.keenLoc;
-        if (this.impassables.filter(function (el) {
-          return _this4.validateKeenLoc(el, { yAdj: -1 });
-        }).length === 0 && _keenLoc3['y'] - 1 >= 0) {
-          this.setState(function (prevState, props) {
-            var prev_loc = _this4.state.keenLoc;
-            return { keenLoc: { x: prev_loc['x'], y: prev_loc['y'] - 1 } };
-          });
-        }
+        this.moveUp();
       }
     }
   }, {
-    key: 'leftButton',
-    value: function leftButton() {
-      console.log("left button firing from gameboy");
+    key: 'moveLeft',
+    value: function moveLeft() {
+      var _this4 = this;
+
+      var keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
+      if (this.impassables.filter(function (el) {
+        return _this4.validateKeenLoc(el, { xAdj: -1 });
+      }).length === 0 && keenLoc['x'] - 1 >= 0) {
+        this.setState(function (prevState, props) {
+          var prev_loc = prevState.keenLoc;
+          return { keenLoc: { x: prev_loc['x'] - 1, y: prev_loc['y'] } };
+        });
+      }
+    }
+  }, {
+    key: 'moveRight',
+    value: function moveRight() {
+      var _this5 = this;
+
+      var keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
+      if (this.impassables.filter(function (el) {
+        return _this5.validateKeenLoc(el, { xAdj: 1 });
+      }).length === 0 && keenLoc['x'] + 1 < _level_details.BOARD_WIDTH) {
+        this.setState(function (prevState, props) {
+          var prev_loc = prevState.keenLoc;
+          return { keenLoc: { x: prev_loc['x'] + 1, y: prev_loc['y'] } };
+        });
+      }
+    }
+  }, {
+    key: 'buttonDown',
+    value: function buttonDown() {
+      // console.log("button down firing beginning")
+      // var e = new Event("keydown");
+      // e.key="d";    // just enter the char you want to send
+      // e.keyCode=e.key.charCodeAt(0);
+      // e.which=e.keyCode;
+      // e.altKey=false;
+      // e.ctrlKey=true;
+      // e.shiftKey=false;
+      // e.metaKey=false;
+      // document.dispatchEvent(e);
+      // console.log("button down firing ending")
+
+      var event = new KeyboardEvent("keypress", {
+        "key": "Enter"
+      });
+      el.dispatchEvent(event);
+    }
+  }, {
+    key: 'moveDown',
+    value: function moveDown() {
+      var _this6 = this;
+
+      var keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
+      if (this.impassables.filter(function (el) {
+        return _this6.validateKeenLoc(el, { yAdj: 1 });
+      }).length === 0 && keenLoc['y'] + 1 < _level_details.BOARD_LENGTH) {
+        this.setState(function (prevState, props) {
+          var prev_loc = prevState.keenLoc;
+          return { keenLoc: { x: prev_loc['x'], y: prev_loc['y'] + 1 } };
+        });
+      }
+    }
+  }, {
+    key: 'moveUp',
+    value: function moveUp() {
+      var _this7 = this;
+
+      var keenLoc = (0, _lodash.merge)({}, this.state.keenLoc);
+      if (this.impassables.filter(function (el) {
+        return _this7.validateKeenLoc(el, { yAdj: -1 });
+      }).length === 0 && keenLoc['y'] - 1 >= 0) {
+        this.setState(function (prevState, props) {
+          var prev_loc = _this7.state.keenLoc;
+          return { keenLoc: { x: prev_loc['x'], y: prev_loc['y'] - 1 } };
+        });
+      }
     }
   }, {
     key: 'render',
@@ -11513,7 +11542,14 @@ var Game = function (_React$Component) {
           ' '
         ),
         foodModal,
-        winnerBubble
+        winnerBubble,
+        _react2.default.createElement(_gameboy_controller2.default, {
+          moveUp: this.moveUp.bind(this),
+          buttonDown: this.buttonDown.bind(this),
+          moveRight: this.moveRight.bind(this),
+          moveLeft: this.moveLeft.bind(this),
+          moveBlock: this.moveBlocks
+        })
       );
     }
   }]);
@@ -11572,8 +11608,27 @@ var GameboyController = function (_React$Component) {
     value: function render() {
       return _react2.default.createElement(
         "div",
-        { onClick: this.props.leftButton, className: "blue-square" },
-        " HELLO "
+        null,
+        _react2.default.createElement(
+          "div",
+          { onMouseUp: this.props.moveUp, className: "top-square" },
+          "  "
+        ),
+        _react2.default.createElement(
+          "div",
+          { onMouseUp: this.props.moveLeft, className: "left-square" },
+          "  "
+        ),
+        _react2.default.createElement(
+          "div",
+          { onMouseUp: this.props.moveRight, className: "right-square" },
+          "  "
+        ),
+        _react2.default.createElement(
+          "div",
+          { onMouseUp: this.props.buttonDown, className: "bottom-square" },
+          "  "
+        )
       );
     }
   }]);

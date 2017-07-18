@@ -302,9 +302,47 @@ img#pixel-bubble{
     z-index: 5;
 }
 
-.blue-square{
-  height: 600px;
-  width: 30px;
-  background-color: blue;
+.top-square{
+  height: 60px;
+  width: 60px;
+  background-color: transparent;
+  position: absolute;
+  top: 490px;
+  left: -63px;
+}
+
+.left-square{
+  height: 60px;
+  width: 60px;
+  background-color: transparent;
+  position: absolute;
+  top: 545px;
+  left: -115px;
+}
+
+.right-square{
+  height: 60px;
+  width: 60px;
+  background-color: transparent;
+  position: absolute;
+  top: 545px;
+  left: -10px;
+}
+
+.bottom-square{
+  height: 60px;
+  width: 60px;
+  background-color: transparent;
+  position: absolute;
+  top: 600px;
+  left: -65px;
+}
+
+.level-text{
+  height: auto;
+  width: 60px;
+  position: absolute;
+  left: 20px;
+  bottom: 40px;
 
 }

@@ -13,8 +13,6 @@ import { merge } from 'lodash';
 class Game extends React.Component{
   constructor(props) {
     super(props);
-    this.restartGame = this.restartGame.bind(this);
-    this.updateGame = this.updateGame.bind(this);
     this.handleInputs = this.handleInputs.bind(this);
     this.moveBlocks = this.moveBlocks.bind(this);
     this.handleResetGame = this.handleResetGame.bind(this);
@@ -37,19 +35,6 @@ class Game extends React.Component{
     this.foodNotification = false;
     this.winNotification = false;
     this.winner = false;
-  }
-
-  restartGame() {
-
-  }
-
-  updateGame(tile, flagged) {
-
-  }
-
-  illegalMoveObjects(e){
-
-
   }
 
   componentDidMount(){
@@ -254,7 +239,6 @@ class Game extends React.Component{
 
   moveBlocks(e){
     let keenLoc = this.state.keenLoc;
-
     this.setState( (prevState, props) => {
       let prevLoc = prevState.keenLoc;
       let newLoc = this.state.keenLoc;
@@ -332,55 +316,84 @@ class Game extends React.Component{
 
   handleInputs(e){
       if (e.keyCode === 65 || e.keyCode === 37){
-        let keenLoc = merge({}, this.state.keenLoc);
-        if ( (this.impassables.filter((el) => (this.validateKeenLoc(el, {xAdj: -1}))).length === 0)
-          && ( keenLoc['x']-1 >= 0 ) ) {
-          this.setState( (prevState, props) => {
-            let prev_loc = prevState.keenLoc;
-            return { keenLoc: {x: prev_loc['x']-1, y: prev_loc['y']} };
-          });
-
-
-        }
+        this.moveLeft();
       }
 
       if (e.keyCode === 68 || e.keyCode === 39){
-        let keenLoc = merge({}, this.state.keenLoc);
-        if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {xAdj: 1}))).length === 0)
-            && ( keenLoc['x']+1 < BOARD_WIDTH )){
-            this.setState( (prevState, props) => {
-              let prev_loc = prevState.keenLoc;
-              return { keenLoc: {x: prev_loc['x']+1, y: prev_loc['y']} };
-            });
-        }
+        this.moveRight();
       }
 
       if (e.keyCode === 83 || e.keyCode === 40){
-        let keenLoc = this.state.keenLoc
-        if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {yAdj: 1}))).length === 0)
-          && ( keenLoc['y']+1 < BOARD_LENGTH )){
-          this.setState( (prevState, props) => {
-            let prev_loc = prevState.keenLoc;
-            return { keenLoc: {x: prev_loc['x'], y: prev_loc['y']+1} }
-          });
-        }
+        this.moveDown();
       }
 
       if (e.keyCode === 87 || e.keyCode === 38){
-        let keenLoc = this.state.keenLoc
-        if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {yAdj: -1}))).length === 0 )
-          && ( keenLoc['y']-1 >= 0 )){
-          this.setState( (prevState, props) => {
-            let prev_loc = this.state.keenLoc;
-            return { keenLoc: {x: prev_loc['x'], y: prev_loc['y']-1} }
-          });
-        }
+        this.moveUp();
       }
   }
 
+  moveLeft(){
+    let keenLoc = merge({}, this.state.keenLoc);
+    if ( (this.impassables.filter((el) => (this.validateKeenLoc(el, {xAdj: -1}))).length === 0)
+      && ( keenLoc['x']-1 >= 0 ) ) {
+      this.setState( (prevState, props) => {
+        let prev_loc = prevState.keenLoc;
+        return { keenLoc: {x: prev_loc['x']-1, y: prev_loc['y']} };
+      });
+    }
 
-  leftButton(){
-    console.log("left button firing from gameboy");
+  }
+
+  moveRight(){
+    let keenLoc = merge({}, this.state.keenLoc);
+    if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {xAdj: 1}))).length === 0)
+        && ( keenLoc['x']+1 < BOARD_WIDTH )){
+        this.setState( (prevState, props) => {
+          let prev_loc = prevState.keenLoc;
+          return { keenLoc: {x: prev_loc['x']+1, y: prev_loc['y']} };
+        });
+    }
+  }
+
+  buttonDown(){
+    // console.log("button down firing beginning")
+    // var e = new Event("keydown");
+    // e.key="d";    // just enter the char you want to send
+    // e.keyCode=e.key.charCodeAt(0);
+    // e.which=e.keyCode;
+    // e.altKey=false;
+    // e.ctrlKey=true;
+    // e.shiftKey=false;
+    // e.metaKey=false;
+    // document.dispatchEvent(e);
+    // console.log("button down firing ending")
+
+    const event = new KeyboardEvent("keypress",{
+    "key": "Enter"
+    });
+    el.dispatchEvent(event);
+  }
+
+  moveDown(){
+    let keenLoc = merge({}, this.state.keenLoc);
+    if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {yAdj: 1}))).length === 0)
+      && ( keenLoc['y']+1 < BOARD_LENGTH )){
+      this.setState( (prevState, props) => {
+        let prev_loc = prevState.keenLoc;
+        return { keenLoc: {x: prev_loc['x'], y: prev_loc['y']+1} }
+      });
+    }
+  }
+
+  moveUp(){
+    let keenLoc = merge({}, this.state.keenLoc);
+    if ( (this.impassables.filter( (el) => (this.validateKeenLoc(el, {yAdj: -1}))).length === 0 )
+      && ( keenLoc['y']-1 >= 0 )){
+      this.setState( (prevState, props) => {
+        let prev_loc = this.state.keenLoc;
+        return { keenLoc: {x: prev_loc['x'], y: prev_loc['y']-1} };
+      });
+    }
   }
 
   render() {
@@ -389,9 +402,6 @@ class Game extends React.Component{
     <div className="level-text">
       <p> Level {this.level} of 3 </p>
     </div>
-
-
-
 
     let foodModal =
     this.foodNotification ?
@@ -414,7 +424,13 @@ class Game extends React.Component{
         <div className="level-title"> {level} </div>
         {foodModal}
         {winnerBubble}
-        {/* <GameboyController leftButton={this.leftButton} /> */}
+        <GameboyController
+          moveUp={this.moveUp.bind(this)}
+          buttonDown={this.buttonDown.bind(this)}
+          moveRight={this.moveRight.bind(this)}
+          moveLeft={this.moveLeft.bind(this)}
+          moveBlock={this.moveBlocks}
+        />
       </div>
     );
   }
